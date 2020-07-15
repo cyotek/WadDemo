@@ -1,0 +1,9 @@
+.vs/
+bin/
+obj/
+samples/**
+_NCrunch_WadDemo/
+
+*.user
+
+!samples/*.bin
