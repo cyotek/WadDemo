@@ -16,3 +16,5 @@ using System.Runtime.InteropServices;
 [assembly: Guid("d7938528-ba1a-4529-8b66-fd9bab60d198")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+
+[assembly: InternalsVisibleTo("Cyotek.Data.Wad.Tests")]
