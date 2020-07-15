@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cyotek.Wad.HexViewer", "hex
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cyotek.Data.Wad.Tests", "tests\Cyotek.Data.Wad.Tests.csproj", "{F684D1C8-95BD-45D3-9D9B-11D07CE33DF1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cyotek.Wad.Info", "wadinfo\Cyotek.Wad.Info.csproj", "{42E4DC87-B86B-42C0-9917-1373A7D73C4F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{F684D1C8-95BD-45D3-9D9B-11D07CE33DF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F684D1C8-95BD-45D3-9D9B-11D07CE33DF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F684D1C8-95BD-45D3-9D9B-11D07CE33DF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42E4DC87-B86B-42C0-9917-1373A7D73C4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42E4DC87-B86B-42C0-9917-1373A7D73C4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42E4DC87-B86B-42C0-9917-1373A7D73C4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42E4DC87-B86B-42C0-9917-1373A7D73C4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
