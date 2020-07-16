@@ -90,18 +90,18 @@ namespace Cyotek.Data.Wad
 
     public void Load(Stream stream)
     {
-      WadReader reader;
-      WadLump lump;
-
-      reader = new WadReader(stream);
-
-      _inputStream = stream;
-      _lumps = new WadLumpCollection(stream);
-      _type = reader.Type;
-
-      while ((lump = reader.GetNextLump()) != null)
+      using (WadReader reader = new WadReader(stream, true))
       {
-        _lumps.Add(lump);
+        WadLump lump;
+
+        _inputStream = stream;
+        _lumps = new WadLumpCollection(stream);
+        _type = reader.Type;
+
+        while ((lump = reader.GetNextLump()) != null)
+        {
+          _lumps.Add(lump);
+        }
       }
     }
 

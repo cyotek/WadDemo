@@ -24,18 +24,18 @@ namespace Cyotek.Tools.WadInfo
     {
       using (Stream stream = File.OpenRead(fileName))
       {
-        WadReader reader;
-        WadLump lump;
-
-        reader = new WadReader(stream);
-
-        Console.WriteLine("File: {0}", fileName);
-        Console.WriteLine("Type: {0}", reader.Type);
-        Console.WriteLine("Lump Count: {0}", reader.Count);
-
-        while ((lump = reader.GetNextLump()) != null)
+        using (WadReader reader = new WadReader(stream))
         {
-          Console.WriteLine("{0}: Offset {1}, Size {2}", lump.Name, lump.Offset, lump.Size);
+          WadLump lump;
+
+          Console.WriteLine("File: {0}", fileName);
+          Console.WriteLine("Type: {0}", reader.Type);
+          Console.WriteLine("Lump Count: {0}", reader.Count);
+
+          while ((lump = reader.GetNextLump()) != null)
+          {
+            Console.WriteLine("{0}: Offset {1}, Size {2}", lump.Name, lump.Offset, lump.Size);
+          }
         }
       }
     }

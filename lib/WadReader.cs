@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Cyotek.Data.Wad
 {
-  public class WadReader
+  public class WadReader : IDisposable
   {
     #region Private Fields
 
@@ -12,11 +12,15 @@ namespace Cyotek.Data.Wad
 
     private readonly int _directoryStart;
 
+    private readonly bool _keepOpen;
+
     private readonly int _lumpCount;
 
     private readonly Stream _stream;
 
     private readonly WadType _type;
+
+    private bool _disposedValue;
 
     private int _lumpIndex;
 
@@ -25,6 +29,11 @@ namespace Cyotek.Data.Wad
     #region Public Constructors
 
     public WadReader(Stream stream)
+      : this(stream, false)
+    {
+    }
+
+    public WadReader(Stream stream, bool keepOpen)
     {
       if (stream == null)
       {
@@ -57,6 +66,7 @@ namespace Cyotek.Data.Wad
       _lumpCount = WordHelpers.GetInt32Le(_buffer, WadConstants.LumpCountOffset);
       _directoryStart = WordHelpers.GetInt32Le(_buffer, WadConstants.DirectoryStartOffset);
 
+      _keepOpen = keepOpen;
       _stream = stream;
       _lumpIndex = 0;
     }
@@ -83,6 +93,12 @@ namespace Cyotek.Data.Wad
     #endregion Public Properties
 
     #region Public Methods
+
+    public void Dispose()
+    {
+      this.Dispose(disposing: true);
+      GC.SuppressFinalize(this);
+    }
 
     public WadLump GetNextLump()
     {
@@ -122,6 +138,23 @@ namespace Cyotek.Data.Wad
     }
 
     #endregion Public Methods
+
+    #region Protected Methods
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (!_disposedValue)
+      {
+        if (disposing && !_keepOpen)
+        {
+          _stream.Dispose();
+        }
+
+        _disposedValue = true;
+      }
+    }
+
+    #endregion Protected Methods
 
     #region Private Methods
 

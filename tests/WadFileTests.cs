@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices.ComTypes;
@@ -24,7 +25,7 @@ namespace Cyotek.Data.Wad.Tests
 
       // act
       actual = WadFile.LoadFrom(fileName);
-
+      
       // assert
       WadAssert.AreEqual(expected, actual);
     }
