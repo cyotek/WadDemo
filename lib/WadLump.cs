@@ -15,6 +15,8 @@ namespace Cyotek.Data.Wad
 
     private int _offset;
 
+    private string _pendingFileName;
+
     private int _size;
 
     #endregion Private Fields
@@ -47,6 +49,16 @@ namespace Cyotek.Data.Wad
 
     #endregion Public Properties
 
+    #region Internal Properties
+
+    internal string PendingFileName
+    {
+      get { return _pendingFileName; }
+      set { _pendingFileName = value; }
+    }
+
+    #endregion Internal Properties
+
     #region Public Methods
 
     public bool Equals(WadLump other)
@@ -67,7 +79,20 @@ namespace Cyotek.Data.Wad
 
     public Stream GetInputStream()
     {
-      return _container != null ? new OffsetStream(_container, _offset, _size) : null;
+      Stream result;
+
+      if (string.IsNullOrEmpty(_pendingFileName))
+      {
+        result = _container != null
+           ? new OffsetStream(_container, _offset, _size)
+           : null;
+      }
+      else
+      {
+        result = File.OpenRead(_pendingFileName);
+      }
+
+      return result;
     }
 
     public byte[] ToArray()

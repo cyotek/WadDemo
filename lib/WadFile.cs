@@ -1,10 +1,14 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Cyotek.Data.Wad
 {
   public class WadFile
   {
     #region Private Fields
+
+    private const int _maximumInMemorySize = 1048576 * 100;
 
     private Stream _inputStream;
 
@@ -16,9 +20,19 @@ namespace Cyotek.Data.Wad
 
     #region Public Constructors
 
-    public WadFile()
+    public WadFile(Stream stream)
     {
-      _type = WadType.Internal;
+      this.Load(stream);
+    }
+
+    public WadFile()
+      : this(WadType.Internal)
+    {
+    }
+
+    public WadFile(WadType type)
+    {
+      _type = type;
       _lumps = new WadLumpCollection(_inputStream);
     }
 
@@ -61,9 +75,55 @@ namespace Cyotek.Data.Wad
       return result;
     }
 
+    public void AddFile(string name, string fileName)
+    {
+      _lumps.Add(new WadLump
+      {
+        Name = name,
+        PendingFileName = fileName
+      });
+    }
+
+    public void ReplaceFile(string name, string fileName)
+    {
+      WadLump[] lumps;
+
+      lumps = this.FindAll(name);
+
+      if (lumps.Length == 0)
+      {
+        throw new KeyNotFoundException(string.Format("Could not find lump '{0}'.", name));
+      }
+
+      if (lumps.Length > 1)
+      {
+        throw new InvalidOperationException(string.Format("More than one lump named '{0}' found.", name));
+      }
+
+      lumps[0].PendingFileName = fileName;
+    }
+
     public WadLump Find(string name)
     {
       return this.Find(name, 0);
+    }
+
+    public WadLump[] FindAll(string name)
+    {
+      List<WadLump> lumps;
+      WadLump lump;
+      int index;
+
+      lumps = new List<WadLump>();
+      index = 0;
+
+      while ((lump = this.Find(name, index)) != null)
+      {
+        index = lump.Index + 1;
+        lumps.Add(lump);
+      }
+
+      return lumps.ToArray();
     }
 
     public WadLump Find(string name, int start)
@@ -110,6 +170,85 @@ namespace Cyotek.Data.Wad
       this.Load(File.OpenRead(fileName));
     }
 
+    public void Save()
+    {
+      this.Save(_inputStream);
+    }
+
+    public void Save(Stream stream)
+    {
+      using (Stream temp = this.GetTemporaryStream())
+      {
+        using (WadOutputStream output = new WadOutputStream(temp, _type))
+        {
+          for (int i = 0; i < _lumps.Count; i++)
+          {
+            WadLump lump;
+
+            lump = _lumps[i];
+            output.PutNextEntry(lump.Name);
+
+            using (Stream input = lump.GetInputStream())
+            {
+              input.CopyTo(output);
+            }
+          }
+
+          output.Flush();
+        }
+
+        stream.Position = 0;
+        stream.SetLength(0);
+
+        temp.Position = 0;
+        temp.CopyTo(stream);
+      }
+    }
+
     #endregion Public Methods
+
+    // 100MiB
+
+    #region Private Methods
+
+    private Stream GetTemporaryStream()
+    {
+      return this.ShouldUseFileStream() ? new TemporaryFileStream() : (Stream)new MemoryStream();
+    }
+
+    private bool ShouldUseFileStream()
+    {
+      bool result;
+      long size;
+
+      size = WadConstants.WadHeaderLength + (_lumps.Count * WadConstants.DirectoryHeaderLength);
+      result = false;
+
+      for (int i = 0; i < _lumps.Count; i++)
+      {
+        WadLump lump;
+
+        lump = _lumps[i];
+
+        if (!string.IsNullOrEmpty(lump.PendingFileName) && File.Exists(lump.PendingFileName))
+        {
+          size += new FileInfo(lump.PendingFileName).Length;
+        }
+        else
+        {
+          size += lump.Size;
+        }
+
+        if (size >= _maximumInMemorySize)
+        {
+          result = true;
+          break;
+        }
+      }
+
+      return result;
+    }
+
+    #endregion Private Methods
   }
 }

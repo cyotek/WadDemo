@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using System.IO;
-using System.Security.Cryptography;
 
 namespace Cyotek.Data.Wad.Tests
 {
@@ -16,7 +15,7 @@ namespace Cyotek.Data.Wad.Tests
       using (Stream input = File.OpenRead(expected))
       {
         expectedReader = new WadReader(input);
-        actualReader = new WadReader(actual);
+        actualReader = new WadReader(actual, true);
 
         Assert.AreEqual(expectedReader.Type, actualReader.Type, "Types do not match.");
         Assert.AreEqual(expectedReader.Count, actualReader.Count, "Lump count does not match.");
@@ -38,7 +37,7 @@ namespace Cyotek.Data.Wad.Tests
     {
       WadReader expectedReader;
 
-      expectedReader = new WadReader(expected);
+      expectedReader = new WadReader(expected, true);
 
       Assert.AreEqual(expectedReader.Type, actual.Type, "Types do not match.");
       Assert.AreEqual(expectedReader.Count, actual.Lumps.Count, "Lump count does not match.");
@@ -92,17 +91,5 @@ namespace Cyotek.Data.Wad.Tests
     }
 
     #endregion Public Methods
-
-    #region Private Methods
-
-    private static byte[] Hash(Stream stream)
-    {
-      using (HashAlgorithm hash = SHA256.Create())
-      {
-        return hash.ComputeHash(stream);
-      }
-    }
-
-    #endregion Private Methods
   }
 }

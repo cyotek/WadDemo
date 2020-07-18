@@ -20,31 +20,31 @@ namespace Cyotek.Data.Wad.Tests
           byte[] expected;
           byte[] actual;
 
-          expected = File.ReadAllBytes(this.GetDataFileName("test.wad"));
+          expected = File.ReadAllBytes(this.GetDataFileName("nfo.wad"));
 
           // act
           using (BinaryWriter writer = new BinaryWriter(target, Encoding.UTF8, true))
           {
-            target.PutNextEntry("P_START");
             target.PutNextEntry("PHOTO1");
-            writer.Write(File.ReadAllBytes(this.GetDataFileName("photo1.jpg")));
+            writer.Write(File.ReadAllBytes(this.GetDataFileName("photo1.inf")));
             target.PutNextEntry("PHOTO2");
-            writer.Write(File.ReadAllBytes(this.GetDataFileName("photo2.jpg")));
+            writer.Write(File.ReadAllBytes(this.GetDataFileName("photo2.inf")));
             target.PutNextEntry("PHOTO5");
-            writer.Write(File.ReadAllBytes(this.GetDataFileName("photo5.jpg")));
-            target.PutNextEntry("P_END");
+            writer.Write(File.ReadAllBytes(this.GetDataFileName("photo5.inf")));
           }
 
           // assert
           target.Flush();
           output.Position = 0;
           actual = output.ToArray();
+          //File.WriteAllBytes(@"D:\Checkout\trunk\cyotek\source\demo\WadDemo\tests\data\test.wad", actual);
           CollectionAssert.AreEqual(expected, actual);
-          //WadAssert.AreEqual(this.GetDataFileName("test.wad"), output);
-          //File.WriteAllBytes(this.GetDataFileName("test.wad"), output.ToArray());
+          //WadAssert.AreEqual(this.GetDataFileName("nfo.wad"), output);
         }
       }
     }
+
+
 
     #endregion Public Methods
   }

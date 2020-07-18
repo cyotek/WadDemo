@@ -1,8 +1,6 @@
 ﻿using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices.ComTypes;
 
 namespace Cyotek.Data.Wad.Tests
 {
@@ -11,23 +9,55 @@ namespace Cyotek.Data.Wad.Tests
   {
     #region Public Methods
 
+    public static IEnumerable<TestCaseData> FindTestCaseSource()
+    {
+      yield return new TestCaseData("NOTTHERE", 0, null).SetName(nameof(FindTestCaseSource) + "NoMatch");
+      yield return new TestCaseData("ALPHA", 0, new WadLump { Name = "ALPHA" }).SetName(nameof(FindTestCaseSource) + "Match");
+      yield return new TestCaseData("GAMMA", 0, new WadLump { Name = "GAMMA", Index = 2 }).SetName(nameof(FindTestCaseSource) + "FirstMatch");
+      yield return new TestCaseData("GAMMA", 4, new WadLump { Name = "GAMMA", Index = 4 }).SetName(nameof(FindTestCaseSource) + "SkipMatch");
+    }
+
     [Test]
-    public void LoadTest()
+    public void FindAllTest()
     {
       // arrange
-      WadFile actual;
-      Stream expected;
-      string fileName;
+      WadFile target;
+      WadLump[] actual;
+      WadLump[] expected;
+      WadLump alpha1;
+      WadLump alpha2;
+      WadLump alpha3;
 
-      fileName = this.GetDataFileName("test.wad");
+      alpha1 = new WadLump { Name = "ALPHA" };
+      alpha2 = new WadLump { Name = "ALPHA" };
+      alpha3 = new WadLump { Name = "ALPHA" };
 
-      expected = this.CreateSampleWad();
+      target = new WadFile();
+      target.Lumps.Add(alpha1);
+      target.Lumps.Add(new WadLump { Name = "BETA" });
+      target.Lumps.Add(new WadLump { Name = "GAMMA" });
+      target.Lumps.Add(new WadLump { Name = "DELTA" });
+      target.Lumps.Add(new WadLump { Name = "GAMMA" });
+      target.Lumps.Add(alpha2);
+      target.Lumps.Add(new WadLump { Name = "EPSILON" });
+      target.Lumps.Add(alpha3);
+
+      expected = new[]
+      {
+        alpha1,
+        alpha2,
+        alpha3
+      };
 
       // act
-      actual = WadFile.LoadFrom(fileName);
-      
+      actual = target.FindAll("ALPHA");
+
       // assert
-      WadAssert.AreEqual(expected, actual);
+      Assert.AreEqual(expected.Length, actual.Length);
+      for (int i = 0; i < expected.Length; i++)
+      {
+        Assert.AreSame(expected[i], actual[i]);
+      }
     }
 
     [Test]
@@ -53,14 +83,97 @@ namespace Cyotek.Data.Wad.Tests
       WadAssert.AreEqual(expected, actual);
     }
 
-    public static IEnumerable<TestCaseData> FindTestCaseSource()
+    [Test]
+    public void LoadTest()
     {
-      yield return new TestCaseData("NOTTHERE", 0, null).SetName(nameof(FindTestCaseSource) + "NoMatch");
-      yield return new TestCaseData("ALPHA", 0, new WadLump { Name = "ALPHA" }).SetName(nameof(FindTestCaseSource) + "Match");
-      yield return new TestCaseData("GAMMA", 0, new WadLump { Name = "GAMMA", Index = 2 }).SetName(nameof(FindTestCaseSource) + "FirstMatch");
-      yield return new TestCaseData("GAMMA", 4, new WadLump { Name = "GAMMA", Index = 4 }).SetName(nameof(FindTestCaseSource) + "SkipMatch");
+      // arrange
+      WadFile actual;
+      Stream expected;
+      string fileName;
+
+      fileName = this.GetDataFileName("nfo.wad");
+
+      expected = this.CreateSampleWad();
+
+      // act
+      actual = WadFile.LoadFrom(fileName);
+
+      // assert
+      WadAssert.AreEqual(expected, actual);
     }
 
+    [Test]
+    public void OptimiseTest()
+    {
+      // arrange
+      using (Stream stream = this.CreateUnoptomizedSampleWad())
+      {
+        WadFile target;
+        byte[] expected;
+        byte[] actual;
+
+        expected = File.ReadAllBytes(this.GetDataFileName("nfo.wad"));
+
+        target = WadFile.LoadFrom(stream);
+
+        // act
+        target.Save();
+
+        // assert
+        actual = ((MemoryStream)stream).ToArray();
+        CollectionAssert.AreEqual(expected, actual);
+      }
+    }
+
+    [Test]
+    public void ReplaceTest()
+    {
+      // arrange
+      using (Stream stream = this.CreateSampleWad())
+      {
+        WadFile target;
+        byte[] expected;
+        byte[] actual;
+
+        expected = File.ReadAllBytes(this.GetDataFileName("replace.wad"));
+
+        target = new WadFile(stream);
+        target.ReplaceFile("PHOTO2", this.GetDataFileName("photo2.jpg"));
+
+        // act
+        target.Save(stream);
+
+        // assert
+        actual = ((MemoryStream)stream).ToArray();
+        CollectionAssert.AreEqual(expected, actual);
+      }
+    }
+
+    [Test]
+    public void SaveTest()
+    {
+      // arrange
+      using (MemoryStream stream = new MemoryStream())
+      {
+        WadFile target;
+        byte[] expected;
+        byte[] actual;
+
+        expected = File.ReadAllBytes(this.GetDataFileName("nfo.wad"));
+
+        target = new WadFile(WadType.Patch);
+        target.AddFile("PHOTO1", this.GetDataFileName("photo1.inf"));
+        target.AddFile("PHOTO2", this.GetDataFileName("photo2.inf"));
+        target.AddFile("PHOTO5", this.GetDataFileName("photo5.inf"));
+
+        // act
+        target.Save(stream);
+
+        // assert
+        actual = stream.ToArray();
+        CollectionAssert.AreEqual(expected, actual);
+      }
+    }
 
     #endregion Public Methods
   }
