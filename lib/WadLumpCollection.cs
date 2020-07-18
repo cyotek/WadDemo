@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.IO;
 
 namespace Cyotek.Data.Wad
@@ -8,15 +7,14 @@ namespace Cyotek.Data.Wad
   {
     #region Private Fields
 
-    private readonly Stream _container;
+    private Stream _container;
 
     #endregion Private Fields
 
     #region Internal Constructors
 
-    internal WadLumpCollection(Stream container)
+    internal WadLumpCollection()
     {
-      _container = container;
     }
 
     #endregion Internal Constructors
@@ -26,6 +24,7 @@ namespace Cyotek.Data.Wad
     internal Stream Container
     {
       get { return _container; }
+      set { _container = value; }
     }
 
     #endregion Internal Properties
@@ -47,16 +46,8 @@ namespace Cyotek.Data.Wad
       item.SetContainer(_container);
 
       base.InsertItem(index, item);
-    
-      this.SetIndexes(index);
-    }
 
-    private void SetIndexes(int index)
-    {
-      for (int i = index; i < this.Count; i++)
-      {
-        this[i].Index = i;
-      }
+      this.SetIndexes(index);
     }
 
     protected override void RemoveItem(int index)
@@ -79,5 +70,17 @@ namespace Cyotek.Data.Wad
     }
 
     #endregion Protected Methods
+
+    #region Private Methods
+
+    private void SetIndexes(int index)
+    {
+      for (int i = index; i < this.Count; i++)
+      {
+        this[i].Index = i;
+      }
+    }
+
+    #endregion Private Methods
   }
 }

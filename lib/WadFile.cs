@@ -20,11 +20,6 @@ namespace Cyotek.Data.Wad
 
     #region Public Constructors
 
-    public WadFile(Stream stream)
-    {
-      this.Load(stream);
-    }
-
     public WadFile()
       : this(WadType.Internal)
     {
@@ -33,7 +28,13 @@ namespace Cyotek.Data.Wad
     public WadFile(WadType type)
     {
       _type = type;
-      _lumps = new WadLumpCollection(_inputStream);
+      _lumps = new WadLumpCollection();
+    }
+
+    public WadFile(Stream stream)
+      : this()
+    {
+      this.Load(stream);
     }
 
     #endregion Public Constructors
@@ -84,46 +85,9 @@ namespace Cyotek.Data.Wad
       });
     }
 
-    public void ReplaceFile(string name, string fileName)
-    {
-      WadLump[] lumps;
-
-      lumps = this.FindAll(name);
-
-      if (lumps.Length == 0)
-      {
-        throw new KeyNotFoundException(string.Format("Could not find lump '{0}'.", name));
-      }
-
-      if (lumps.Length > 1)
-      {
-        throw new InvalidOperationException(string.Format("More than one lump named '{0}' found.", name));
-      }
-
-      lumps[0].PendingFileName = fileName;
-    }
-
     public WadLump Find(string name)
     {
       return this.Find(name, 0);
-    }
-
-    public WadLump[] FindAll(string name)
-    {
-      List<WadLump> lumps;
-      WadLump lump;
-      int index;
-
-      lumps = new List<WadLump>();
-      index = 0;
-
-      while ((lump = this.Find(name, index)) != null)
-      {
-        index = lump.Index + 1;
-        lumps.Add(lump);
-      }
-
-      return lumps.ToArray();
     }
 
     public WadLump Find(string name, int start)
@@ -148,6 +112,24 @@ namespace Cyotek.Data.Wad
       return result;
     }
 
+    public WadLump[] FindAll(string name)
+    {
+      List<WadLump> lumps;
+      WadLump lump;
+      int index;
+
+      lumps = new List<WadLump>();
+      index = 0;
+
+      while ((lump = this.Find(name, index)) != null)
+      {
+        index = lump.Index + 1;
+        lumps.Add(lump);
+      }
+
+      return lumps.ToArray();
+    }
+
     public void Load(Stream stream)
     {
       using (WadReader reader = new WadReader(stream, true))
@@ -155,7 +137,8 @@ namespace Cyotek.Data.Wad
         WadLump lump;
 
         _inputStream = stream;
-        _lumps = new WadLumpCollection(stream);
+        _lumps.Clear();
+        _lumps.Container = stream;
         _type = reader.Type;
 
         while ((lump = reader.GetNextLump()) != null)
@@ -168,6 +151,25 @@ namespace Cyotek.Data.Wad
     public void Load(string fileName)
     {
       this.Load(File.OpenRead(fileName));
+    }
+
+    public void ReplaceFile(string name, string fileName)
+    {
+      WadLump[] lumps;
+
+      lumps = this.FindAll(name);
+
+      if (lumps.Length == 0)
+      {
+        throw new KeyNotFoundException(string.Format("Could not find lump '{0}'.", name));
+      }
+
+      if (lumps.Length > 1)
+      {
+        throw new InvalidOperationException(string.Format("More than one lump named '{0}' found.", name));
+      }
+
+      lumps[0].PendingFileName = fileName;
     }
 
     public void Save()
