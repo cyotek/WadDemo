@@ -27,8 +27,6 @@ namespace Cyotek.Data.Wad
 
     public WadOutputStream(Stream output, WadType type)
     {
-      byte[] buffer;
-
       if (output == null)
       {
         throw new ArgumentNullException(nameof(output));
@@ -53,14 +51,7 @@ namespace Cyotek.Data.Wad
       _start = output.Position;
       _lumps = new List<WadLump>();
 
-      buffer = new byte[WadConstants.WadHeaderLength];
-
-      buffer[0] = type == WadType.Internal ? (byte)'I' : (byte)'P';
-      buffer[1] = (byte)'W';
-      buffer[2] = (byte)'A';
-      buffer[3] = (byte)'D';
-
-      output.Write(buffer, 0, WadConstants.WadHeaderLength);
+      this.WriteWadHeader(type);
     }
 
     #endregion Public Constructors
@@ -96,16 +87,6 @@ namespace Cyotek.Data.Wad
     #endregion Public Properties
 
     #region Public Methods
-
-    public override void Close()
-    {
-      if (!_writtenDirectory)
-      {
-        this.Flush();
-      }
-
-      base.Close();
-    }
 
     public override void Flush()
     {
@@ -166,6 +147,20 @@ namespace Cyotek.Data.Wad
 
     #endregion Public Methods
 
+    #region Protected Methods
+
+    protected override void Dispose(bool disposing)
+    {
+      if (disposing && !_writtenDirectory)
+      {
+        this.Flush();
+      }
+
+      base.Dispose(disposing);
+    }
+
+    #endregion Protected Methods
+
     #region Private Methods
 
     private void FinaliseLump()
@@ -221,6 +216,20 @@ namespace Cyotek.Data.Wad
       }
 
       _writtenDirectory = true;
+    }
+
+    private void WriteWadHeader(WadType type)
+    {
+      byte[] buffer;
+
+      buffer = new byte[WadConstants.WadHeaderLength];
+
+      buffer[0] = type == WadType.Internal ? (byte)'I' : (byte)'P';
+      buffer[1] = (byte)'W';
+      buffer[2] = (byte)'A';
+      buffer[3] = (byte)'D';
+
+      _output.Write(buffer, 0, WadConstants.WadHeaderLength);
     }
 
     #endregion Private Methods
