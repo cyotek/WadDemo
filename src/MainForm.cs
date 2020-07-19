@@ -354,12 +354,7 @@ namespace Cyotek.Windows.Forms.Demo
 
     private void OpenWad(string fileName)
     {
-      WadFile wad;
-
-      wad = new WadFile();
-      wad.Load(fileName);
-
-      _wadFile = wad;
+      _wadFile = WadFile.LoadFrom(fileName);
 
       this.FillItems();
 
