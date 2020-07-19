@@ -42,11 +42,11 @@ namespace Cyotek.Data.Wad.Tests
       {
         using (BinaryWriter writer = new BinaryWriter(target, Encoding.UTF8, true))
         {
-          target.PutNextEntry("PHOTO1");
+          target.PutNextLump("PHOTO1");
           writer.Write(File.ReadAllBytes(this.GetDataFileName("photo1.inf")));
-          target.PutNextEntry("PHOTO2");
+          target.PutNextLump("PHOTO2");
           writer.Write(File.ReadAllBytes(this.GetDataFileName("photo2.inf")));
-          target.PutNextEntry("PHOTO5");
+          target.PutNextLump("PHOTO5");
           writer.Write(File.ReadAllBytes(this.GetDataFileName("photo5.inf")));
         }
       }
@@ -66,26 +66,26 @@ namespace Cyotek.Data.Wad.Tests
       {
         using (BinaryWriter writer = new BinaryWriter(target, Encoding.UTF8, true))
         {
-          target.PutNextEntry("P_START");
-          target.PutNextEntry("P1_START");
-          target.PutNextEntry("INFO");
+          target.PutNextLump("P_START");
+          target.PutNextLump("P1_START");
+          target.PutNextLump("INFO");
           writer.Write(File.ReadAllBytes(this.GetDataFileName("photo1.infpg")));
-          target.PutNextEntry("DATA");
+          target.PutNextLump("DATA");
           writer.Write(File.ReadAllBytes(this.GetDataFileName("photo1.jpg")));
-          target.PutNextEntry("P1_END");
-          target.PutNextEntry("P2_START");
-          target.PutNextEntry("INFO");
+          target.PutNextLump("P1_END");
+          target.PutNextLump("P2_START");
+          target.PutNextLump("INFO");
           writer.Write(File.ReadAllBytes(this.GetDataFileName("photo2.infpg")));
-          target.PutNextEntry("DATA");
+          target.PutNextLump("DATA");
           writer.Write(File.ReadAllBytes(this.GetDataFileName("photo2.jpg")));
-          target.PutNextEntry("P2_END");
-          target.PutNextEntry("P3_START");
-          target.PutNextEntry("INFO");
+          target.PutNextLump("P2_END");
+          target.PutNextLump("P3_START");
+          target.PutNextLump("INFO");
           writer.Write(File.ReadAllBytes(this.GetDataFileName("photo5.infpg")));
-          target.PutNextEntry("DATA");
+          target.PutNextLump("DATA");
           writer.Write(File.ReadAllBytes(this.GetDataFileName("photo5.jpg")));
-          target.PutNextEntry("P3_END");
-          target.PutNextEntry("P_END");
+          target.PutNextLump("P3_END");
+          target.PutNextLump("P_END");
         }
       }
 

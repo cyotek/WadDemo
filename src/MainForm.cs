@@ -96,7 +96,7 @@ namespace Cyotek.Windows.Forms.Demo
           {
             toolStripProgressBar.Value++;
 
-            wad.PutNextEntry(names[i]);
+            wad.PutNextLump(names[i]);
 
             using (Stream input = File.OpenRead(files[i]))
             {

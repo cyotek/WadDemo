@@ -25,11 +25,11 @@ namespace Cyotek.Data.Wad.Tests
           // act
           using (BinaryWriter writer = new BinaryWriter(target, Encoding.UTF8, true))
           {
-            target.PutNextEntry("PHOTO1");
+            target.PutNextLump("PHOTO1");
             writer.Write(File.ReadAllBytes(this.GetDataFileName("photo1.inf")));
-            target.PutNextEntry("PHOTO2");
+            target.PutNextLump("PHOTO2");
             writer.Write(File.ReadAllBytes(this.GetDataFileName("photo2.inf")));
-            target.PutNextEntry("PHOTO5");
+            target.PutNextLump("PHOTO5");
             writer.Write(File.ReadAllBytes(this.GetDataFileName("photo5.inf")));
           }
 

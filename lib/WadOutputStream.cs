@@ -99,7 +99,7 @@ namespace Cyotek.Data.Wad
       _output.Flush();
     }
 
-    public void PutNextEntry(string name)
+    public void PutNextLump(string name)
     {
       if (string.IsNullOrEmpty(name))
       {

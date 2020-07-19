@@ -188,7 +188,7 @@ namespace Cyotek.Data.Wad
             WadLump lump;
 
             lump = _lumps[i];
-            output.PutNextEntry(lump.Name);
+            output.PutNextLump(lump.Name);
 
             using (Stream input = lump.GetInputStream())
             {
