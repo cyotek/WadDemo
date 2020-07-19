@@ -128,6 +128,8 @@ namespace Cyotek.Data.Wad
         lump.SetContainer(_stream);
 
         _lumpIndex++;
+
+        _stream.Position = lump.Offset;
       }
       else
       {
@@ -173,7 +175,9 @@ namespace Cyotek.Data.Wad
         }
       }
 
-      return length > 0 ? Encoding.ASCII.GetString(entry, WadConstants.LumpNameOffset, length) : null;
+      return length > 0
+         ? Encoding.ASCII.GetString(entry, WadConstants.LumpNameOffset, length)
+         : null;
     }
 
     private bool IsWadSignature(byte[] buffer)
