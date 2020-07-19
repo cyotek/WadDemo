@@ -1,5 +1,6 @@
 ﻿using Cyotek.Data.Wad;
 using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace Cyotek.Tools.WadInfo
@@ -13,6 +14,12 @@ namespace Cyotek.Tools.WadInfo
       for (int i = 0; i < args.Length; i++)
       {
         Program.WriteWadInfo(Path.Combine(Environment.CurrentDirectory, args[i]));
+      }
+
+      if (Debugger.IsAttached)
+      {
+        Console.WriteLine("(Press any key to exit.)");
+        Console.ReadKey(true);
       }
     }
 
