@@ -58,10 +58,7 @@ namespace Cyotek.Data.Wad
       get { return _position; }
       set
       {
-        if (value < 0 || value > _length)
-        {
-          throw new ArgumentOutOfRangeException(nameof(value), value, "Value outside of stream range.");
-        }
+        Guard.ThrowIfOutOfBounds(value, 0, _length, "Value outside of stream range.", nameof(value));
 
         _position = value;
       }
@@ -97,22 +94,21 @@ namespace Cyotek.Data.Wad
     {
       long value;
 
-      switch (origin)
+      if (origin == SeekOrigin.Begin)
       {
-        case SeekOrigin.Begin:
-          value = offset;
-          break;
-
-        case SeekOrigin.Current:
-          value = _position + offset;
-          break;
-
-        case SeekOrigin.End:
-          value = _length - offset;
-          break;
-
-        default:
-          throw new ArgumentOutOfRangeException(nameof(origin), origin, "Invalid origin value.");
+        value = offset;
+      }
+      else if (origin == SeekOrigin.Current)
+      {
+        value = _position + offset;
+      }
+      else if (origin == SeekOrigin.End)
+      {
+        value = _length - offset;
+      }
+      else
+      {
+        throw new ArgumentOutOfRangeException(nameof(origin), origin, "Invalid origin value.");
       }
 
       this.Position = value;

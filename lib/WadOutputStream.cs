@@ -29,11 +29,7 @@ namespace Cyotek.Data.Wad
     {
       Guard.ThrowIfNull(output, nameof(output));
       Guard.ThrowIfUnwriteableStream(output, nameof(output));
-
-      if (type < WadType.Internal || type > WadType.Patch)
-      {
-        throw new ArgumentOutOfRangeException(nameof(type), type, "Invalid WAD type.");
-      }
+      Guard.ThrowIfOutOfBounds(type, WadType.Internal, WadType.Patch, "Invalid WAD type.", nameof(type));
 
       _output = output;
       _start = output.Position;
@@ -90,11 +86,7 @@ namespace Cyotek.Data.Wad
     public void PutNextLump(string name)
     {
       Guard.ThrowIfNullOrEmpty(name, nameof(name));
-
-      if (name.Length > 8)
-      {
-        throw new ArgumentOutOfRangeException(nameof(name), name.Length, "Name must be between 1 and 8 characters in length.");
-      }
+      Guard.ThrowIfOutOfBounds(name.Length, 1, WadConstants.LumpNameLength, "Name must be between 1 and 8 characters in length.", nameof(name));
 
       if (_writtenDirectory)
       {
