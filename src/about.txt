@@ -1,0 +1,7 @@
+﻿From the Cyotek blog:
+• Reading DOOM WAD Files <https://www.cyotek.com/blog/reading-doom-wad-files>
+• Writing DOOM WAD Files <https://www.cyotek.com/blog/writing-doom-wad-files>
+• Parsing DOOM Picture Files <https://www.cyotek.com/blog/parsing-doom-picture-files>
+
+Source code:
+• GitHub <https://github.com/cyotek/WadDemo>
