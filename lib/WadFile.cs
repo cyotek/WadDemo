@@ -181,6 +181,7 @@ namespace Cyotek.Data.Wad
     {
       Guard.ThrowIfNull(stream, nameof(stream));
       Guard.ThrowIfUnwriteableStream(stream, nameof(stream));
+      Guard.ThrowIfUnseekableStream(stream, nameof(stream));
 
       using (Stream temp = this.GetTemporaryStream())
       {

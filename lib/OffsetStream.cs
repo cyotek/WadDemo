@@ -23,6 +23,7 @@ namespace Cyotek.Data.Wad
     {
       Guard.ThrowIfNull(source, nameof(source));
       Guard.ThrowIfUnreadableStream(source, nameof(source));
+      Guard.ThrowIfUnseekableStream(source, nameof(source));
 
       _stream = source;
       _start = start;

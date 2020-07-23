@@ -62,7 +62,11 @@ namespace Cyotek.Data.Wad
       {
         throw new ArgumentException("Stream is not readable.", name);
       }
+    }
 
+    [DebuggerHidden]
+    public static void ThrowIfUnseekableStream(Stream obj, string name)
+    {
       if (!obj.CanSeek)
       {
         throw new ArgumentException("Stream is not seekable.", name);
@@ -75,11 +79,6 @@ namespace Cyotek.Data.Wad
       if (!obj.CanWrite)
       {
         throw new ArgumentException("Stream is not writable.", name);
-      }
-
-      if (!obj.CanSeek)
-      {
-        throw new ArgumentException("Stream is not seekable.", name);
       }
     }
 

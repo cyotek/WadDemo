@@ -37,6 +37,7 @@ namespace Cyotek.Data.Wad
     {
       Guard.ThrowIfNull(stream, nameof(stream));
       Guard.ThrowIfUnreadableStream(stream, nameof(stream));
+      Guard.ThrowIfUnseekableStream(stream, nameof(stream));
 
       _buffer = new byte[WadConstants.DirectoryHeaderLength];
 

@@ -29,6 +29,7 @@ namespace Cyotek.Data.Wad
     {
       Guard.ThrowIfNull(output, nameof(output));
       Guard.ThrowIfUnwriteableStream(output, nameof(output));
+      Guard.ThrowIfUnseekableStream(output, nameof(output));
       Guard.ThrowIfOutOfBounds(type, WadType.Internal, WadType.Patch, "Invalid WAD type.", nameof(type));
 
       _output = output;
