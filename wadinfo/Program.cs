@@ -1,7 +1,8 @@
-﻿using Cyotek.Data.Wad;
+﻿using CommandLine;
+using Cyotek.Tools.WadInfo.Commands;
+using Cyotek.Tools.WadInfo.Verbs;
 using System;
 using System.Diagnostics;
-using System.IO;
 
 namespace Cyotek.Tools.WadInfo
 {
@@ -11,10 +12,16 @@ namespace Cyotek.Tools.WadInfo
 
     public static void Main(string[] args)
     {
-      for (int i = 0; i < args.Length; i++)
+      Type[] types;
+
+      types = new[]
       {
-        Program.WriteWadInfo(Path.Combine(Environment.CurrentDirectory, args[i]));
-      }
+        typeof(InfoVerbOptions),
+        typeof(ListGapsVerbOptions)
+      };
+
+      Parser.Default.ParseArguments(args, types)
+            .WithParsed(Run);
 
       if (Debugger.IsAttached)
       {
@@ -27,23 +34,17 @@ namespace Cyotek.Tools.WadInfo
 
     #region Private Methods
 
-    private static void WriteWadInfo(string fileName)
+    private static void Run(object obj)
     {
-      using (Stream stream = File.OpenRead(fileName))
+      switch (obj)
       {
-        using (WadReader reader = new WadReader(stream))
-        {
-          WadLump lump;
+        case InfoVerbOptions info:
+          new InfoCommand().Run(info);
+          break;
 
-          Console.WriteLine("File: {0}", fileName);
-          Console.WriteLine("Type: {0}", reader.Type);
-          Console.WriteLine("Lump Count: {0}", reader.Count);
-
-          while ((lump = reader.GetNextLump()) != null)
-          {
-            Console.WriteLine("{0}: Offset {1}, Size {2}", lump.Name, lump.Offset, lump.Size);
-          }
-        }
+        case ListGapsVerbOptions listGaps:
+          new ListGapsCommand().Run(listGaps);
+          break;
       }
     }
 
