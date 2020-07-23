@@ -35,20 +35,8 @@ namespace Cyotek.Data.Wad
 
     public WadReader(Stream stream, bool keepOpen)
     {
-      if (stream == null)
-      {
-        throw new ArgumentNullException(nameof(stream));
-      }
-
-      if (!stream.CanRead)
-      {
-        throw new ArgumentException("Cannot read from stream.", nameof(stream));
-      }
-
-      if (!stream.CanSeek)
-      {
-        throw new ArgumentException("Cannot seek from stream.", nameof(stream));
-      }
+      Guard.ThrowIfNull(stream, nameof(stream));
+      Guard.ThrowIfUnreadableStream(stream, nameof(stream));
 
       _buffer = new byte[WadConstants.DirectoryHeaderLength];
 

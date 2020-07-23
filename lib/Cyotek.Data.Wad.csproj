@@ -34,6 +34,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Guard.cs" />
     <Compile Include="OffsetStream.cs" />
     <Compile Include="TemporaryFileStream.cs" />
     <Compile Include="WadConstants.cs" />

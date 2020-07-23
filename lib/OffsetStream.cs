@@ -21,20 +21,8 @@ namespace Cyotek.Data.Wad
 
     public OffsetStream(Stream source, int start, int length)
     {
-      if (source == null)
-      {
-        throw new ArgumentNullException(nameof(source));
-      }
-
-      if (!source.CanRead)
-      {
-        throw new ArgumentException("Stream is not readable.", nameof(source));
-      }
-
-      if (!source.CanSeek)
-      {
-        throw new ArgumentException("Stream is not seekable.", nameof(source));
-      }
+      Guard.ThrowIfNull(source, nameof(source));
+      Guard.ThrowIfUnreadableStream(source, nameof(source));
 
       _stream = source;
       _start = start;

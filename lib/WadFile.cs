@@ -179,6 +179,9 @@ namespace Cyotek.Data.Wad
 
     public void Save(Stream stream)
     {
+      Guard.ThrowIfNull(stream, nameof(stream));
+      Guard.ThrowIfUnwriteableStream(stream, nameof(stream));
+
       using (Stream temp = this.GetTemporaryStream())
       {
         using (WadOutputStream output = new WadOutputStream(temp, _type))
@@ -208,8 +211,6 @@ namespace Cyotek.Data.Wad
     }
 
     #endregion Public Methods
-
-    // 100MiB
 
     #region Private Methods
 

@@ -27,20 +27,8 @@ namespace Cyotek.Data.Wad
 
     public WadOutputStream(Stream output, WadType type)
     {
-      if (output == null)
-      {
-        throw new ArgumentNullException(nameof(output));
-      }
-
-      if (!output.CanWrite)
-      {
-        throw new ArgumentException("Stream is not writable.", nameof(output));
-      }
-
-      if (!output.CanSeek)
-      {
-        throw new ArgumentException("Stream is not seekable.", nameof(output));
-      }
+      Guard.ThrowIfNull(output, nameof(output));
+      Guard.ThrowIfUnwriteableStream(output, nameof(output));
 
       if (type < WadType.Internal || type > WadType.Patch)
       {
@@ -101,10 +89,7 @@ namespace Cyotek.Data.Wad
 
     public void PutNextLump(string name)
     {
-      if (string.IsNullOrEmpty(name))
-      {
-        throw new ArgumentNullException(nameof(name));
-      }
+      Guard.ThrowIfNullOrEmpty(name, nameof(name));
 
       if (name.Length > 8)
       {
