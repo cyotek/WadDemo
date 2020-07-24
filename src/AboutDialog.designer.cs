@@ -82,6 +82,7 @@
       // 
       this.webLinkLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.webLinkLabel.AutoSize = true;
+      this.webLinkLabel.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
       this.webLinkLabel.Location = new System.Drawing.Point(12, 251);
       this.webLinkLabel.Name = "webLinkLabel";
       this.webLinkLabel.Size = new System.Drawing.Size(89, 13);
@@ -104,9 +105,10 @@
       this.infoLinkLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.infoLinkLabel.Location = new System.Drawing.Point(50, 78);
+      this.infoLinkLabel.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+      this.infoLinkLabel.Location = new System.Drawing.Point(53, 78);
       this.infoLinkLabel.Name = "infoLinkLabel";
-      this.infoLinkLabel.Size = new System.Drawing.Size(402, 165);
+      this.infoLinkLabel.Size = new System.Drawing.Size(399, 165);
       this.infoLinkLabel.TabIndex = 4;
       this.infoLinkLabel.UseMnemonic = false;
       this.infoLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.InfoLinkLabel_LinkClicked);
