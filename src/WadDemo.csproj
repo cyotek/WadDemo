@@ -89,9 +89,6 @@
     <EmbeddedResource Include="AboutDialog.resx">
       <DependentUpon>AboutDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BaseForm.resx">
-      <DependentUpon>BaseForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="MakeWadDialog.resx">
       <DependentUpon>MakeWadDialog.cs</DependentUpon>
     </EmbeddedResource>
