@@ -1,5 +1,16 @@
 ﻿using System.IO;
 
+// Loading the color palette from a BBM/LBM image file using C
+// https://www.cyotek.com/blog/loading-the-color-palette-from-a-bbm-lbm-image-file-using-csharp
+
+// Copyright © 2014 Cyotek Ltd. All Rights Reserved.
+
+// This work is licensed under the Creative Commons Attribution 4.0 International License.
+// To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
+
+// Found this example useful?
+// https://www.paypal.me/cyotek
+
 namespace Cyotek.Demo
 {
   internal class FileInfo

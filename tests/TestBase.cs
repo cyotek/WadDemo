@@ -2,6 +2,20 @@
 using System.IO;
 using System.Text;
 
+// Reading DOOM WAD files
+// https://www.cyotek.com/blog/reading-doom-wad-files
+
+// Writing DOOM WAD files
+// https://www.cyotek.com/blog/writing-doom-wad-files
+
+// Copyright © 2020 Cyotek Ltd. All Rights Reserved.
+
+// This work is licensed under the Creative Commons Attribution 4.0 International License.
+// To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
+
+// Found this example useful?
+// https://www.paypal.me/cyotek
+
 namespace Cyotek.Data.Wad.Tests
 {
   public class TestBase
@@ -32,30 +46,6 @@ namespace Cyotek.Data.Wad.Tests
 
     #region Protected Methods
 
-    protected Stream CreateSampleWad()
-    {
-      MemoryStream output;
-
-      output = new MemoryStream();
-
-      using (WadOutputStream target = new WadOutputStream(output))
-      {
-        using (BinaryWriter writer = new BinaryWriter(target, Encoding.UTF8, true))
-        {
-          target.PutNextLump("PHOTO1");
-          writer.Write(File.ReadAllBytes(this.GetDataFileName("photo1.inf")));
-          target.PutNextLump("PHOTO2");
-          writer.Write(File.ReadAllBytes(this.GetDataFileName("photo2.inf")));
-          target.PutNextLump("PHOTO5");
-          writer.Write(File.ReadAllBytes(this.GetDataFileName("photo5.inf")));
-        }
-      }
-
-      output.Position = 0;
-
-      return output;
-    }
-    
     protected Stream CreateGroupedSampleWad()
     {
       MemoryStream output;
@@ -86,6 +76,30 @@ namespace Cyotek.Data.Wad.Tests
           writer.Write(File.ReadAllBytes(this.GetDataFileName("photo5.jpg")));
           target.PutNextLump("P3_END");
           target.PutNextLump("P_END");
+        }
+      }
+
+      output.Position = 0;
+
+      return output;
+    }
+
+    protected Stream CreateSampleWad()
+    {
+      MemoryStream output;
+
+      output = new MemoryStream();
+
+      using (WadOutputStream target = new WadOutputStream(output))
+      {
+        using (BinaryWriter writer = new BinaryWriter(target, Encoding.UTF8, true))
+        {
+          target.PutNextLump("PHOTO1");
+          writer.Write(File.ReadAllBytes(this.GetDataFileName("photo1.inf")));
+          target.PutNextLump("PHOTO2");
+          writer.Write(File.ReadAllBytes(this.GetDataFileName("photo2.inf")));
+          target.PutNextLump("PHOTO5");
+          writer.Write(File.ReadAllBytes(this.GetDataFileName("photo5.inf")));
         }
       }
 

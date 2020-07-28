@@ -2,11 +2,22 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("Doom Wad Hex Viewer")]
+// Reading DOOM WAD files
+// https://www.cyotek.com/blog/reading-doom-wad-files
+
+// Copyright © 2020 Cyotek Ltd. All Rights Reserved.
+
+// This work is licensed under the Creative Commons Attribution 4.0 International License.
+// To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
+
+// Found this example useful? 
+// https://www.paypal.me/cyotek
+
+[assembly: AssemblyTitle("DOOM Wad Hex Viewer")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Cyotek Ltd")]
-[assembly: AssemblyProduct("Doom Wad Hex Viewer")]
+[assembly: AssemblyProduct("DOOM Wad Hex Viewer")]
 [assembly: AssemblyCopyright("Copyright © 2020 Cyotek Ltd. All Rights Reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

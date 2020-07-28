@@ -1,11 +1,25 @@
 ﻿using System;
 using System.Drawing;
 
+// Reading DOOM WAD files
+// https://www.cyotek.com/blog/reading-doom-wad-files
+
+// Writing DOOM WAD files
+// https://www.cyotek.com/blog/writing-doom-wad-files
+
+// Copyright © 2020 Cyotek Ltd. All Rights Reserved.
+
+// This work is licensed under the Creative Commons Attribution 4.0 International License.
+// To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
+
+// Found this example useful?
+// https://www.paypal.me/cyotek
+
 namespace Cyotek.Windows.Forms.Demo
 {
   internal partial class InformationDialog : BaseForm
   {
-    #region Constructors
+    #region Public Constructors
 
     /// <summary>
     /// Initializes a new instance of the <see cref="InformationDialog"/> class.
@@ -45,32 +59,9 @@ namespace Cyotek.Windows.Forms.Demo
     public InformationDialog(string text, string promptText, string data)
       : this(null, text, promptText, data)
     { }
+    #endregion Public Constructors
 
-    #endregion
-
-    #region Static Methods
-
-    public static void ShowDialog(string text, string promptText, string data)
-    {
-      ShowDialog(null, text, promptText, data);
-    }
-
-    public static void ShowDialog(Font font, string text, string promptText, string data)
-    {
-      using (InformationDialog dialog = new InformationDialog(font, text, promptText, data))
-      {
-        dialog.ShowDialog();
-      }
-    }
-
-    public static void ShowDialog(string data)
-    {
-      ShowDialog("View", "&Data:", data);
-    }
-
-    #endregion
-
-    #region Properties
+    #region Public Properties
 
     /// <summary>
     /// Gets or sets the data.
@@ -92,9 +83,29 @@ namespace Cyotek.Windows.Forms.Demo
       set { informationLabel.Text = value; }
     }
 
-    #endregion
+    #endregion Public Properties
 
-    #region Methods
+    #region Public Methods
+
+    public static void ShowDialog(string text, string promptText, string data)
+    {
+      ShowDialog(null, text, promptText, data);
+    }
+
+    public static void ShowDialog(Font font, string text, string promptText, string data)
+    {
+      using (InformationDialog dialog = new InformationDialog(font, text, promptText, data))
+      {
+        dialog.ShowDialog();
+      }
+    }
+
+    public static void ShowDialog(string data)
+    {
+      ShowDialog("View", "&Data:", data);
+    }
+
+    #endregion Public Methods
 
     //protected override void OnLoad(EventArgs e)
     //{
@@ -106,6 +117,8 @@ namespace Cyotek.Windows.Forms.Demo
     //  }
     //}
 
+    #region Private Methods
+
     /// <summary>
     /// Handles the Click event of the closeButton control.
     /// </summary>
@@ -116,6 +129,6 @@ namespace Cyotek.Windows.Forms.Demo
       this.Close();
     }
 
-    #endregion
+    #endregion Private Methods
   }
 }
