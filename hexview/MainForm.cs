@@ -1,9 +1,8 @@
-﻿using Cyotek.Demo;
-using Cyotek.Demo.Wad;
+﻿using Cyotek.Demo.Wad;
+using Cyotek.Demo.Windows.Forms;
 using System;
 using System.IO;
 using System.Windows.Forms;
-using FileInfo = Cyotek.Demo.FileInfo;
 
 // Reading DOOM WAD files
 // https://www.cyotek.com/blog/reading-doom-wad-files
@@ -16,7 +15,7 @@ using FileInfo = Cyotek.Demo.FileInfo;
 // Found this example useful?
 // https://www.paypal.me/cyotek
 
-namespace Cyotek.Demo.Windows.Forms
+namespace Cyotek.Demo
 {
   public partial class MainForm : Form
   {

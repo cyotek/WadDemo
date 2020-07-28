@@ -1,4 +1,4 @@
-﻿namespace Cyotek.Demo.Windows.Forms
+﻿namespace Cyotek.Demo
 {
   partial class MainForm
   {
@@ -278,7 +278,7 @@
     private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
     private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-    private HexViewer hexViewer;
+    private Cyotek.Demo.Windows.Forms.HexViewer hexViewer;
     private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem toolTipsToolStripMenuItem;
     private System.Windows.Forms.ToolStripStatusLabel statusToolStripStatusLabel;
