@@ -16,7 +16,7 @@ using FileInfo = Cyotek.Demo.FileInfo;
 // Found this example useful?
 // https://www.paypal.me/cyotek
 
-namespace Cyotek.Windows.Forms.Demo
+namespace Cyotek.Demo.Windows.Forms
 {
   public partial class MainForm : Form
   {

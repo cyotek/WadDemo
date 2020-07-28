@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 
 // Reading DOOM WAD files
@@ -19,7 +18,7 @@ using System.Windows.Forms;
 // Found this example useful?
 // https://www.paypal.me/cyotek
 
-namespace Cyotek.Windows.Forms.Demo
+namespace Cyotek.Demo.Windows.Forms
 {
   internal partial class AboutDialog : BaseForm
   {
@@ -91,7 +90,7 @@ namespace Cyotek.Windows.Forms.Demo
       copyrightLabel.Text = versionInfo.LegalCopyright;
 
       iconPictureBox.Size = SystemInformation.IconSize;
-      iconPictureBox.Image = Application.OpenForms.Cast<Form>().Single(f => f.GetType() == typeof(MainForm)).Icon.ToBitmap();
+      iconPictureBox.Image = GetIconBitmap();
 
       x = iconPictureBox.Right + iconPictureBox.Margin.Right + nameLabel.Margin.Left;
       w = this.ClientSize.Width - (iconPictureBox.Left + x);
@@ -109,6 +108,26 @@ namespace Cyotek.Windows.Forms.Demo
     #endregion Protected Methods
 
     #region Private Methods
+
+    private static Bitmap GetIconBitmap()
+    {
+      Bitmap result;
+      FormCollection forms;
+
+      result = null;
+      forms = Application.OpenForms;
+
+      for (int i = 0; i < forms.Count; i++)
+      {
+        if (forms[i] is MainForm form)
+        {
+          result = form.Icon.ToBitmap();
+          break;
+        }
+      }
+
+      return result;
+    }
 
     private void CloseButton_Click(object sender, EventArgs e)
     {

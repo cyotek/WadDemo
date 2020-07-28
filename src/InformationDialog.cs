@@ -15,7 +15,7 @@ using System.Drawing;
 // Found this example useful?
 // https://www.paypal.me/cyotek
 
-namespace Cyotek.Windows.Forms.Demo
+namespace Cyotek.Demo.Windows.Forms
 {
   internal partial class InformationDialog : BaseForm
   {

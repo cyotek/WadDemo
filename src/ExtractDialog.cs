@@ -1,4 +1,4 @@
-﻿using Cyotek.Windows.Forms.Demo;
+﻿using Cyotek.Demo.Windows.Forms;
 using System;
 using System.IO;
 using System.Windows.Forms;

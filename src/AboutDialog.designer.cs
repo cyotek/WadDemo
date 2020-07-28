@@ -1,4 +1,4 @@
-﻿namespace Cyotek.Windows.Forms.Demo
+﻿namespace Cyotek.Demo.Windows.Forms
 {
   partial class AboutDialog
   {

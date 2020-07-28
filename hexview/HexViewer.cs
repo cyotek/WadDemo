@@ -19,7 +19,7 @@ using System.Windows.Forms;
 // Found this example useful?
 // https://www.paypal.me/cyotek
 
-namespace Cyotek.Windows.Forms.Demo
+namespace Cyotek.Demo.Windows.Forms
 {
   [DefaultEvent("TopRowChanged")]
   internal class HexViewer : Control

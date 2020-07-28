@@ -1,7 +1,7 @@
 ﻿using Be.Windows.Forms;
 using Cyotek.Data.Wad;
-using Cyotek.Demo;
 using Cyotek.Demo.Wad;
+using Cyotek.Demo.Windows.Forms;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,7 +22,7 @@ using System.Windows.Forms;
 // Found this example useful?
 // https://www.paypal.me/cyotek
 
-namespace Cyotek.Windows.Forms.Demo
+namespace Cyotek.Demo
 {
   internal partial class MainForm : BaseForm
   {

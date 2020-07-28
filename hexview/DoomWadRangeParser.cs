@@ -1,5 +1,5 @@
 ﻿using Cyotek.Data.Wad;
-using Cyotek.Windows.Forms.Demo;
+using Cyotek.Demo.Windows.Forms;
 using System;
 using System.Drawing;
 using System.IO;

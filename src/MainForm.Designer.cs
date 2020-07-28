@@ -1,4 +1,4 @@
-﻿namespace Cyotek.Windows.Forms.Demo
+﻿namespace Cyotek.Demo
 {
   partial class MainForm
   {

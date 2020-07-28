@@ -1,4 +1,4 @@
-﻿namespace Cyotek.Windows.Forms.Demo
+﻿namespace Cyotek.Demo.Windows.Forms
 {
   partial class MainForm
   {
@@ -47,8 +47,8 @@
       this.toolTipsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.fontToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-      this.filePane = new Cyotek.Windows.Forms.Demo.FilePane();
-      this.hexViewer = new Cyotek.Windows.Forms.Demo.HexViewer();
+      this.filePane = new Cyotek.Demo.Windows.Forms.FilePane();
+      this.hexViewer = new Cyotek.Demo.Windows.Forms.HexViewer();
       this.toolStrip.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
       this.splitContainer.Panel1.SuspendLayout();
@@ -284,7 +284,7 @@
     private System.Windows.Forms.ToolStripStatusLabel statusToolStripStatusLabel;
     private System.Windows.Forms.ToolStripStatusLabel cyotekLinkToolStripStatusLabel;
     private System.Windows.Forms.ToolStripStatusLabel sizeToolStripStatusLabel;
-    private Cyotek.Windows.Forms.Demo.FilePane filePane;
+    private Cyotek.Demo.Windows.Forms.FilePane filePane;
     private System.Windows.Forms.ToolStripMenuItem fontToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
   }
