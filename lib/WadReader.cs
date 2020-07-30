@@ -173,7 +173,7 @@ namespace Cyotek.Data.Wad
       {
         if (entry[i - 1] != '\0')
         {
-          length = i - 8;
+          length = i - WadConstants.LumpNameOffset;
           break;
         }
       }
