@@ -56,6 +56,9 @@
     <Compile Include="WordHelperTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="data\photos.wad">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="data\replace.wad">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -58,6 +58,55 @@ namespace Cyotek.Data.Wad.Tests
       }
     }
 
+    [Test]
+    public void FullWriteWithEmptyLumpsTest()
+    {
+      // arrange
+      using (MemoryStream output = new MemoryStream())
+      {
+        using (WadOutputStream target = new WadOutputStream(output))
+        {
+          byte[] expected;
+          byte[] actual;
+
+          expected = File.ReadAllBytes(this.GetDataFileName("photos.wad"));
+
+          // act
+          using (BinaryWriter writer = new BinaryWriter(target, Encoding.UTF8, true))
+          {
+            target.PutNextLump("P_START");
+            target.PutNextLump("P1_START");
+            target.PutNextLump("INFO");
+            writer.Write(File.ReadAllBytes(this.GetDataFileName("photo1.inf")));
+            target.PutNextLump("DATA");
+            writer.Write(File.ReadAllBytes(this.GetDataFileName("photo1.jpg")));
+            target.PutNextLump("P1_END");
+            target.PutNextLump("P2_START");
+            target.PutNextLump("INFO");
+            writer.Write(File.ReadAllBytes(this.GetDataFileName("photo2.inf")));
+            target.PutNextLump("DATA");
+            writer.Write(File.ReadAllBytes(this.GetDataFileName("photo2.jpg")));
+            target.PutNextLump("P2_END");
+            target.PutNextLump("P3_START");
+            target.PutNextLump("INFO");
+            writer.Write(File.ReadAllBytes(this.GetDataFileName("photo5.inf")));
+            target.PutNextLump("DATA");
+            writer.Write(File.ReadAllBytes(this.GetDataFileName("photo5.jpg")));
+            target.PutNextLump("P3_END");
+            target.PutNextLump("P_END");
+          }
+
+          // assert
+          target.Flush();
+          output.Position = 0;
+          actual = output.ToArray();
+          //File.WriteAllBytes(@"D:\Checkout\trunk\cyotek\source\demo\WadDemo\tests\data\photos.wad", actual);
+          CollectionAssert.AreEqual(expected, actual);
+          //WadAssert.AreEqual(this.GetDataFileName("photos.wad"), output);
+        }
+      }
+    }
+
     #endregion Public Methods
   }
 }
