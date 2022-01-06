@@ -3,6 +3,7 @@ bin/
 obj/
 samples/**
 _NCrunch_*/
+packages/
 
 *.user
 
