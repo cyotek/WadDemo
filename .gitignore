@@ -6,5 +6,5 @@ _NCrunch_*/
 packages/
 
 *.user
-
 !samples/*.bin
+launchSettings.json

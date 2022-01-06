@@ -33,12 +33,6 @@ namespace Cyotek.Tools.WadInfo
 
       Parser.Default.ParseArguments(args, types)
             .WithParsed(Run);
-
-      if (Debugger.IsAttached)
-      {
-        Console.WriteLine("(Press any key to exit.)");
-        Console.ReadKey(true);
-      }
     }
 
     #endregion Public Methods
