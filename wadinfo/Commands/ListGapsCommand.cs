@@ -124,10 +124,7 @@ namespace Cyotek.Tools.WadInfo.Commands
 
       #region Public Properties
 
-      public int End
-      {
-        get { return this.Start + this.Length; }
-      }
+      public int End => this.Start + this.Length;
 
       public int Length { get; set; }
 

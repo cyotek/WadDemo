@@ -78,20 +78,11 @@ namespace Cyotek.Data.Wad
 
     #region Public Properties
 
-    public int Count
-    {
-      get { return _lumpCount; }
-    }
+    public int Count => _lumpCount;
 
-    public int DirectoryStart
-    {
-      get { return _directoryStart; }
-    }
+    public int DirectoryStart => _directoryStart;
 
-    public WadType Type
-    {
-      get { return _type; }
-    }
+    public WadType Type => _type;
 
     #endregion Public Properties
 

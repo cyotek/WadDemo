@@ -37,8 +37,8 @@ namespace Cyotek.Data.Wad
 
     internal Stream Container
     {
-      get { return _container; }
-      set { _container = value; }
+      get => _container;
+      set => _container = value;
     }
 
     #endregion Internal Properties

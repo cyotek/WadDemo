@@ -28,10 +28,7 @@ namespace Cyotek.Data.Wad.Tests
 
     #region Public Properties
 
-    public string DataPath
-    {
-      get { return _dataPath ?? (_dataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data")); }
-    }
+    public string DataPath => _dataPath ?? (_dataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data"));
 
     #endregion Public Properties
 

@@ -55,20 +55,14 @@ namespace Cyotek.Data.Wad
 
     #region Public Properties
 
-    public Stream InputStream
-    {
-      get { return _inputStream; }
-    }
+    public Stream InputStream => _inputStream;
 
-    public WadLumpCollection Lumps
-    {
-      get { return _lumps; }
-    }
+    public WadLumpCollection Lumps => _lumps;
 
     public WadType Type
     {
-      get { return _type; }
-      set { _type = value; }
+      get => _type;
+      set => _type = value;
     }
 
     #endregion Public Properties

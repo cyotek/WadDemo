@@ -32,20 +32,20 @@ namespace Cyotek.Demo.Wad
 
     public string FileName
     {
-      get { return _fileName; }
-      set { _fileName = value; }
+      get => _fileName;
+      set => _fileName = value;
     }
 
     public string IndexFileName
     {
-      get { return _indexFileName; }
-      set { _indexFileName = value; }
+      get => _indexFileName;
+      set => _indexFileName = value;
     }
 
     public WadType Type
     {
-      get { return _type; }
-      set { _type = value; }
+      get => _type;
+      set => _type = value;
     }
 
     #endregion Public Properties

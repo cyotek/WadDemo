@@ -32,10 +32,7 @@ namespace Cyotek.Demo
 
     #region Public Properties
 
-    public string FullPath
-    {
-      get { return _fullPath; }
-    }
+    public string FullPath => _fullPath;
 
     #endregion Public Properties
 

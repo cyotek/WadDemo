@@ -57,30 +57,18 @@ namespace Cyotek.Data.Wad
 
     #region Public Properties
 
-    public override bool CanRead
-    {
-      get { return false; }
-    }
+    public override bool CanRead => false;
 
-    public override bool CanSeek
-    {
-      get { return false; }
-    }
+    public override bool CanSeek => false;
 
-    public override bool CanWrite
-    {
-      get { return true; }
-    }
+    public override bool CanWrite => true;
 
-    public override long Length
-    {
-      get { return _output.Length; }
-    }
+    public override long Length => _output.Length;
 
     public override long Position
     {
-      get { return _output.Position; }
-      set { throw new NotSupportedException(); }
+      get => _output.Position;
+      set => throw new NotSupportedException();
     }
 
     #endregion Public Properties

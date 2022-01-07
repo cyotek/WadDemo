@@ -44,14 +44,14 @@ namespace Cyotek.Demo.Wad
 
     public string FileName
     {
-      get { return _fileName; }
-      set { _fileName = value; }
+      get => _fileName;
+      set => _fileName = value;
     }
 
     public WadLump Lump
     {
-      get { return _lump; }
-      set { _lump = value; }
+      get => _lump;
+      set => _lump = value;
     }
 
     #endregion Public Properties

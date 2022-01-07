@@ -39,26 +39,26 @@ namespace Cyotek.Data.Wad
 
     public int Index
     {
-      get { return _index; }
-      internal set { _index = value; }
+      get => _index;
+      internal set => _index = value;
     }
 
     public string Name
     {
-      get { return _name; }
-      set { _name = value; }
+      get => _name;
+      set => _name = value;
     }
 
     public int Offset
     {
-      get { return _offset; }
-      set { _offset = value; }
+      get => _offset;
+      set => _offset = value;
     }
 
     public int Size
     {
-      get { return _size; }
-      set { _size = value; }
+      get => _size;
+      set => _size = value;
     }
 
     #endregion Public Properties
@@ -67,8 +67,8 @@ namespace Cyotek.Data.Wad
 
     internal string PendingFileName
     {
-      get { return _pendingFileName; }
-      set { _pendingFileName = value; }
+      get => _pendingFileName;
+      set => _pendingFileName = value;
     }
 
     #endregion Internal Properties

@@ -106,27 +106,15 @@ namespace Cyotek.Demo.Windows.Forms
     [Category("Property Changed")]
     public event EventHandler ShowToolTipsChanged
     {
-      add
-      {
-        this.Events.AddHandler(_eventShowToolTipsChanged, value);
-      }
-      remove
-      {
-        this.Events.RemoveHandler(_eventShowToolTipsChanged, value);
-      }
+      add => this.Events.AddHandler(_eventShowToolTipsChanged, value);
+      remove => this.Events.RemoveHandler(_eventShowToolTipsChanged, value);
     }
 
     [Category("Property Changed")]
     public event EventHandler TopRowChanged
     {
-      add
-      {
-        this.Events.AddHandler(_eventTopRowChanged, value);
-      }
-      remove
-      {
-        this.Events.RemoveHandler(_eventTopRowChanged, value);
-      }
+      add => this.Events.AddHandler(_eventTopRowChanged, value);
+      remove => this.Events.RemoveHandler(_eventTopRowChanged, value);
     }
 
     #endregion Public Events
@@ -145,21 +133,18 @@ namespace Cyotek.Demo.Windows.Forms
     [DefaultValue(typeof(Color), "Window")]
     public override Color BackColor
     {
-      get { return base.BackColor; }
-      set { base.BackColor = value; }
+      get => base.BackColor;
+      set => base.BackColor = value;
     }
 
     [Browsable(false)]
-    public int Columns
-    {
-      get { return _columns; }
-    }
+    public int Columns => _columns;
 
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public byte[] Data
     {
-      get { return _data; }
+      get => _data;
       set
       {
         _groups.Clear();
@@ -183,28 +168,25 @@ namespace Cyotek.Demo.Windows.Forms
     [DefaultValue(typeof(Font), "Courier New, 9.75pt")]
     public override Font Font
     {
-      get { return base.Font; }
-      set { base.Font = value; }
+      get => base.Font;
+      set => base.Font = value;
     }
 
     [DefaultValue(typeof(Color), "WindowText")]
     public override Color ForeColor
     {
-      get { return base.ForeColor; }
-      set { base.ForeColor = value; }
+      get => base.ForeColor;
+      set => base.ForeColor = value;
     }
 
     [Browsable(false)]
-    public int Rows
-    {
-      get { return _rows; }
-    }
+    public int Rows => _rows;
 
     [Category("Behavior")]
     [DefaultValue(true)]
     public bool ShowToolTips
     {
-      get { return _showToolTips; }
+      get => _showToolTips;
       set
       {
         if (_showToolTips != value)
@@ -220,7 +202,7 @@ namespace Cyotek.Demo.Windows.Forms
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public int TopRow
     {
-      get { return _topRow; }
+      get => _topRow;
       set
       {
         if (_topRow != value)
@@ -242,10 +224,7 @@ namespace Cyotek.Demo.Windows.Forms
     /// <returns>
     /// A <see cref="T:System.Windows.Forms.Padding"/> that represents the internal spacing of the contents of a control.
     /// </returns>
-    protected override Padding DefaultPadding
-    {
-      get { return new Padding(6); }
-    }
+    protected override Padding DefaultPadding => new Padding(6);
 
     #endregion Protected Properties
 
@@ -843,20 +822,11 @@ namespace Cyotek.Demo.Windows.Forms
 
       #region Public Properties
 
-      public int Index
-      {
-        get { return _index; }
-      }
+      public int Index => _index;
 
-      public bool IsHit
-      {
-        get { return _isHit; }
-      }
+      public bool IsHit => _isHit;
 
-      public Point Locaiton
-      {
-        get { return _location; }
-      }
+      public Point Locaiton => _location;
 
       #endregion Public Properties
     }
@@ -896,43 +866,40 @@ namespace Cyotek.Demo.Windows.Forms
 
       public Color BackColor
       {
-        get { return _backColor; }
-        set { _backColor = value; }
+        get => _backColor;
+        set => _backColor = value;
       }
 
-      public int End
-      {
-        get { return _start + _length - 1; }
-      }
+      public int End => _start + _length - 1;
 
       public Color ForeColor
       {
-        get { return _foreColor; }
-        set { _foreColor = value; }
+        get => _foreColor;
+        set => _foreColor = value;
       }
 
       public int Length
       {
-        get { return _length; }
-        set { _length = value; }
+        get => _length;
+        set => _length = value;
       }
 
       public int Pointer
       {
-        get { return _pointer; }
-        set { _pointer = value; }
+        get => _pointer;
+        set => _pointer = value;
       }
 
       public int Start
       {
-        get { return _start; }
-        set { _start = value; }
+        get => _start;
+        set => _start = value;
       }
 
       public string Type
       {
-        get { return _type; }
-        set { _type = value; }
+        get => _type;
+        set => _type = value;
       }
 
       #endregion Public Properties

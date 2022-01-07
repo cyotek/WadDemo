@@ -69,8 +69,8 @@ namespace Cyotek.Demo.Windows.Forms
     /// <value>The data.</value>
     public string Data
     {
-      get { return informationTextBox.Text; }
-      set { informationTextBox.Text = value; }
+      get => informationTextBox.Text;
+      set => informationTextBox.Text = value;
     }
 
     /// <summary>
@@ -79,8 +79,8 @@ namespace Cyotek.Demo.Windows.Forms
     /// <value>The prompt text.</value>
     public string PromptText
     {
-      get { return informationLabel.Text; }
-      set { informationLabel.Text = value; }
+      get => informationLabel.Text;
+      set => informationLabel.Text = value;
     }
 
     #endregion Public Properties

@@ -34,32 +34,32 @@ namespace Cyotek.Demo.Wad
 
     public bool CreateIndex
     {
-      get { return _createIndex; }
-      set { _createIndex = value; }
+      get => _createIndex;
+      set => _createIndex = value;
     }
 
     public ExtractMode ExtractMode
     {
-      get { return _extractMode; }
-      set { _extractMode = value; }
+      get => _extractMode;
+      set => _extractMode = value;
     }
 
     public bool OpenExplorerWindow
     {
-      get { return _openExplorerWindow; }
-      set { _openExplorerWindow = value; }
+      get => _openExplorerWindow;
+      set => _openExplorerWindow = value;
     }
 
     public ExtractOverwriteMode OverwriteMode
     {
-      get { return _overwriteMode; }
-      set { _overwriteMode = value; }
+      get => _overwriteMode;
+      set => _overwriteMode = value;
     }
 
     public string Path
     {
-      get { return _path; }
-      set { _path = value; }
+      get => _path;
+      set => _path = value;
     }
 
     #endregion Public Properties

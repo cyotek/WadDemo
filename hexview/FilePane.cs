@@ -60,14 +60,8 @@ namespace Cyotek.Demo.Windows.Forms
     [Category("Property Changed")]
     public event EventHandler MultiSelectChanged
     {
-      add
-      {
-        this.Events.AddHandler(_eventMultiSelectChanged, value);
-      }
-      remove
-      {
-        this.Events.RemoveHandler(_eventMultiSelectChanged, value);
-      }
+      add => this.Events.AddHandler(_eventMultiSelectChanged, value);
+      remove => this.Events.RemoveHandler(_eventMultiSelectChanged, value);
     }
 
     /// <summary>
@@ -76,14 +70,8 @@ namespace Cyotek.Demo.Windows.Forms
     [Category("Property Changed")]
     public event EventHandler PathChanged
     {
-      add
-      {
-        this.Events.AddHandler(_eventPathChanged, value);
-      }
-      remove
-      {
-        this.Events.RemoveHandler(_eventPathChanged, value);
-      }
+      add => this.Events.AddHandler(_eventPathChanged, value);
+      remove => this.Events.RemoveHandler(_eventPathChanged, value);
     }
 
     /// <summary>
@@ -92,14 +80,8 @@ namespace Cyotek.Demo.Windows.Forms
     [Category("Property Changed")]
     public event EventHandler SearchPatternChanged
     {
-      add
-      {
-        this.Events.AddHandler(_eventSearchPatternChanged, value);
-      }
-      remove
-      {
-        this.Events.RemoveHandler(_eventSearchPatternChanged, value);
-      }
+      add => this.Events.AddHandler(_eventSearchPatternChanged, value);
+      remove => this.Events.RemoveHandler(_eventSearchPatternChanged, value);
     }
 
     /// <summary>
@@ -108,14 +90,8 @@ namespace Cyotek.Demo.Windows.Forms
     [Category("Property Changed")]
     public event EventHandler SelectedFileChanged
     {
-      add
-      {
-        this.Events.AddHandler(_eventSelectedFileChanged, value);
-      }
-      remove
-      {
-        this.Events.RemoveHandler(_eventSelectedFileChanged, value);
-      }
+      add => this.Events.AddHandler(_eventSelectedFileChanged, value);
+      remove => this.Events.RemoveHandler(_eventSelectedFileChanged, value);
     }
 
     #endregion Public Events
@@ -126,7 +102,7 @@ namespace Cyotek.Demo.Windows.Forms
     [DefaultValue(false)]
     public bool MultiSelect
     {
-      get { return _multiSelect; }
+      get => _multiSelect;
       set
       {
         if (_multiSelect != value)
@@ -142,7 +118,7 @@ namespace Cyotek.Demo.Windows.Forms
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string Path
     {
-      get { return _path; }
+      get => _path;
       set
       {
         if (_path != value)
@@ -158,7 +134,7 @@ namespace Cyotek.Demo.Windows.Forms
     [DefaultValue("*")]
     public string SearchPattern
     {
-      get { return _searchPattern; }
+      get => _searchPattern;
       set
       {
         if (_searchPattern != value)
@@ -174,7 +150,7 @@ namespace Cyotek.Demo.Windows.Forms
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public FileInfo SelectedFile
     {
-      get { return _selectedFile; }
+      get => _selectedFile;
       set
       {
         if (_selectedFile != value)

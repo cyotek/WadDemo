@@ -41,8 +41,8 @@ namespace Cyotek.Demo.Wad
 
     public MakeWadOptions Options
     {
-      get { return _options; }
-      set { _options = value; }
+      get => _options;
+      set => _options = value;
     }
 
     #endregion Public Properties
