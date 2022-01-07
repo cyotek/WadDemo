@@ -7,7 +7,7 @@ using System.IO;
 // Writing DOOM WAD files
 // https://www.cyotek.com/blog/writing-doom-wad-files
 
-// Copyright © 2020 Cyotek Ltd. All Rights Reserved.
+// Copyright © 2020-2022 Cyotek Ltd. All Rights Reserved.
 
 // This work is licensed under the MIT License.
 // See LICENSE.TXT for the full text
@@ -89,6 +89,29 @@ namespace Cyotek.Data.Wad
     public override bool Equals(object obj)
     {
       return obj is WadLump other && this.Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+      int hash;
+
+#if NETCOREAPP2_1_OR_GREATER
+      HashCode hashCode;
+
+      hashCode = new HashCode();
+      hashCode.Add(_name);
+      hashCode.Add(_offset);
+      hashCode.Add(_size);
+
+      hash = hashCode.ToHashCode();
+#else
+      hash = 17;
+      hash = hash * 23 + _name?.GetHashCode() ?? 0;
+      hash = hash * 23 + _offset.GetHashCode();
+      hash = hash * 23 + _size.GetHashCode();
+#endif
+
+      return hash;
     }
 
     public Stream GetInputStream()
