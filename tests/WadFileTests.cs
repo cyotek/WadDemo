@@ -8,7 +8,7 @@ using System.IO;
 // Writing DOOM WAD files
 // https://www.cyotek.com/blog/writing-doom-wad-files
 
-// Copyright © 2020 Cyotek Ltd. All Rights Reserved.
+// Copyright © 2020-2022 Cyotek Ltd. All Rights Reserved.
 
 // This work is licensed under the MIT License.
 // See LICENSE.TXT for the full text
@@ -95,6 +95,28 @@ namespace Cyotek.Data.Wad.Tests
 
       // assert
       WadAssert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    //[TestCase(@"E:\Games\DOOM\DOOM.WAD", WadType.Internal, TestName = "{m}Internal1")]
+    [TestCase("photos.wad", WadType.Internal, TestName = "{m}Internal")]
+    [TestCase("nfo.wad", WadType.Patch, TestName = "{m}Patch")]
+    public void GetFileTypeTestCases(string fileName, WadType expected)
+    {
+      // arrange
+      WadFile target;
+      WadType actual;
+
+      fileName = this.GetDataFileName(fileName);
+
+      target = new WadFile();
+      target.Load(fileName);
+
+      // act
+      actual = target.Type;
+
+      // assert
+      Assert.AreEqual(expected, actual);
     }
 
     [Test]

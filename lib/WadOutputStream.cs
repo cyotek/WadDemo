@@ -204,7 +204,9 @@ namespace Cyotek.Data.Wad
 
       buffer = new byte[WadConstants.WadHeaderLength];
 
-      buffer[0] = type == WadType.Internal ? (byte)'I' : (byte)'P';
+      buffer[0] = type == WadType.Internal 
+        ? (byte)'I' 
+        : (byte)'P';
       buffer[1] = (byte)'W';
       buffer[2] = (byte)'A';
       buffer[3] = (byte)'D';

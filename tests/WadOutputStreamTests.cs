@@ -8,7 +8,7 @@ using System.Text;
 // Writing DOOM WAD files
 // https://www.cyotek.com/blog/writing-doom-wad-files
 
-// Copyright © 2020 Cyotek Ltd. All Rights Reserved.
+// Copyright © 2020-2022 Cyotek Ltd. All Rights Reserved.
 
 // This work is licensed under the MIT License.
 // See LICENSE.TXT for the full text
@@ -64,7 +64,7 @@ namespace Cyotek.Data.Wad.Tests
       // arrange
       using (MemoryStream output = new MemoryStream())
       {
-        using (WadOutputStream target = new WadOutputStream(output))
+        using (WadOutputStream target = new WadOutputStream(output, WadType.Internal))
         {
           byte[] expected;
           byte[] actual;
