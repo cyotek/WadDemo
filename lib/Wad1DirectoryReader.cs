@@ -28,24 +28,35 @@ namespace Cyotek.Data
 
     public WadLump ReadEntry(Stream stream)
     {
+      WadLump result;
       byte[] buffer;
 
       Guard.ThrowIfNull(stream, nameof(stream));
       Guard.ThrowIfUnreadableStream(stream, nameof(stream));
 
+#if NETCOREAPP2_1_OR_GREATER
+      buffer = System.Buffers.ArrayPool<byte>.Shared.Rent(WadConstants.WadDirectoryEntrySize);
+#else
       buffer = new byte[WadConstants.WadDirectoryEntrySize];
+#endif
 
       if (stream.Read(buffer, 0, WadConstants.WadDirectoryEntrySize) != WadConstants.WadDirectoryEntrySize)
       {
         throw new InvalidDataException("Failed to read directory entry.");
       }
 
-      return new WadLump
+      result = new WadLump
       {
         Offset = WordHelpers.GetInt32Le(buffer, 0),
         Size = WordHelpers.GetInt32Le(buffer, 4),
         Name = CharHelpers.GetSafeName(buffer, WadConstants.LumpNameOffset, WadConstants.LumpNameLength)
       };
+
+#if NETCOREAPP2_1_OR_GREATER
+      System.Buffers.ArrayPool<byte>.Shared.Return(buffer);
+#endif
+
+      return result;
     }
 
     public DirectoryHeader ReadHeader(Stream stream)
@@ -56,7 +67,11 @@ namespace Cyotek.Data
       Guard.ThrowIfNull(stream, nameof(stream));
       Guard.ThrowIfUnreadableStream(stream, nameof(stream));
 
+#if NETCOREAPP2_1_OR_GREATER
+      buffer = System.Buffers.ArrayPool<byte>.Shared.Rent(WadConstants.WadHeaderLength);
+#else
       buffer = new byte[WadConstants.WadHeaderLength];
+#endif
 
       if (stream.Read(buffer, 0, WadConstants.WadHeaderLength) != WadConstants.WadHeaderLength)
       {
@@ -81,6 +96,10 @@ namespace Cyotek.Data
       {
         result = DirectoryHeader.Empty;
       }
+
+#if NETCOREAPP2_1_OR_GREATER
+      System.Buffers.ArrayPool<byte>.Shared.Return(buffer);
+#endif
 
       return result;
     }

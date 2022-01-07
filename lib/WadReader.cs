@@ -148,18 +148,5 @@ namespace Cyotek.Data
     }
 
     #endregion Protected Methods
-
-    #region Private Methods
-
-    private bool TestFormat(Stream stream, IDirectoryReader reader, out DirectoryHeader header)
-    {
-      stream.Position = 0;
-
-      header = reader.ReadHeader(stream);
-
-      return header.Type != WadType.None;
-    }
-
-    #endregion Private Methods
   }
 }
