@@ -33,9 +33,9 @@ namespace Cyotek.Data
       Guard.ThrowIfNull(stream, nameof(stream));
       Guard.ThrowIfUnreadableStream(stream, nameof(stream));
 
-      buffer = new byte[WadConstants.DirectoryHeaderLength];
+      buffer = new byte[WadConstants.WadDirectoryEntrySize];
 
-      if (stream.Read(buffer, 0, WadConstants.DirectoryHeaderLength) != WadConstants.DirectoryHeaderLength)
+      if (stream.Read(buffer, 0, WadConstants.WadDirectoryEntrySize) != WadConstants.WadDirectoryEntrySize)
       {
         throw new InvalidDataException("Failed to read directory entry.");
       }
@@ -44,7 +44,7 @@ namespace Cyotek.Data
       {
         Offset = WordHelpers.GetInt32Le(buffer, 0),
         Size = WordHelpers.GetInt32Le(buffer, 4),
-        Name = CharHelpers.GetSafeName(buffer)
+        Name = CharHelpers.GetSafeName(buffer, WadConstants.LumpNameOffset, WadConstants.LumpNameLength)
       };
     }
 
@@ -56,7 +56,7 @@ namespace Cyotek.Data
       Guard.ThrowIfNull(stream, nameof(stream));
       Guard.ThrowIfUnreadableStream(stream, nameof(stream));
 
-      buffer = new byte[WadConstants.DirectoryHeaderLength];
+      buffer = new byte[WadConstants.WadHeaderLength];
 
       if (stream.Read(buffer, 0, WadConstants.WadHeaderLength) != WadConstants.WadHeaderLength)
       {
@@ -72,8 +72,8 @@ namespace Cyotek.Data
         type = buffer[0] == 'I'
           ? WadType.Internal
           : WadType.Patch;
-        directoryStart = WordHelpers.GetInt32Le(buffer, WadConstants.DirectoryStartOffset);
-        lumpCount = WordHelpers.GetInt32Le(buffer, WadConstants.LumpCountOffset);
+        directoryStart = WordHelpers.GetInt32Le(buffer, WadConstants.WadHeaderDirectoryOffset);
+        lumpCount = WordHelpers.GetInt32Le(buffer, WadConstants.WadHeaderCountOffset);
 
         result = new DirectoryHeader(type, directoryStart, lumpCount);
       }

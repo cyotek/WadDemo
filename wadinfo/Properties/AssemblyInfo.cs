@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // Reading DOOM WAD files
 // https://www.cyotek.com/blog/reading-doom-wad-files
 
-// Copyright © 2020 Cyotek Ltd. All Rights Reserved.
+// Copyright © 2020-2022 Cyotek Ltd. All Rights Reserved.
 
 // This work is licensed under the MIT License.
 // See LICENSE.TXT for the full text
@@ -18,7 +18,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Cyotek Ltd")]
 [assembly: AssemblyProduct("Cyotek WadTools")]
-[assembly: AssemblyCopyright("Copyright © 2020 Cyotek Ltd. All Rights Reserved.")]
+[assembly: AssemblyCopyright("Copyright © 2020-2022 Cyotek Ltd. All Rights Reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]

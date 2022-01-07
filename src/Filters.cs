@@ -22,7 +22,7 @@ namespace Cyotek.Demo.Wad
 
     public static readonly string Text = "Text Files (*.txt)|*.txt|" + AllFiles;
 
-    public static readonly string Wad = "WAD Files (*.wad)|*.wad|" + AllFiles;
+    public static readonly string Wad = "All Supported Files (*.wad;*.pak)|*.wad;*.pak|WAD Files (*.wad)|*.wad|PACK Files (*.pak)|*.pak|" + AllFiles;
 
     #endregion Public Fields
   }

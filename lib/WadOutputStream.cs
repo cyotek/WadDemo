@@ -160,7 +160,7 @@ namespace Cyotek.Data
       byte[] buffer;
       long position;
 
-      buffer = new byte[WadConstants.DirectoryHeaderLength];
+      buffer = new byte[WadConstants.WadDirectoryEntrySize];
       position = _output.Position;
 
       // first update the header

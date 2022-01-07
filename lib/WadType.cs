@@ -20,6 +20,8 @@ namespace Cyotek.Data
 
     Internal,
 
-    Patch
+    Patch,
+
+    Pack
   }
 }

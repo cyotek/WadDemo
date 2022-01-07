@@ -23,9 +23,13 @@ namespace Cyotek.Data
 
     private readonly int _directoryStart;
 
+    private readonly int _entrySize;
+
     private readonly bool _keepOpen;
 
     private readonly int _lumpCount;
+
+    private readonly IDirectoryReader _reader;
 
     private readonly Stream _stream;
 
@@ -46,17 +50,21 @@ namespace Cyotek.Data
 
     public WadReader(Stream stream, bool keepOpen)
     {
-      DirectoryHeader header;
-
-      Guard.ThrowIfNull(stream, nameof(stream));
-      Guard.ThrowIfUnreadableStream(stream, nameof(stream));
-      Guard.ThrowIfUnseekableStream(stream, nameof(stream));
-
-      header = Wad1DirectoryReader.Default.ReadHeader(stream);
-
-      if (header.Type == WadType.None)
+      switch (WadFormatRegistry.GetFormat(stream, out DirectoryHeader header))
       {
-        throw new InvalidDataException("Stream does not appear to be a WAD file.");
+        case WadType.Internal:
+        case WadType.Patch:
+          _reader = Wad1DirectoryReader.Default;
+          _entrySize = WadConstants.WadDirectoryEntrySize;
+          break;
+
+        case WadType.Pack:
+          _reader = PackDirectoryReader.Default;
+          _entrySize = WadConstants.PackDirectoryEntrySize;
+          break;
+
+        default:
+          throw new InvalidDataException("Stream does not appear to be a WAD file.");
       }
 
       _type = header.Type;
@@ -96,11 +104,11 @@ namespace Cyotek.Data
       {
         int offset;
 
-        offset = _directoryStart + (_lumpIndex * WadConstants.DirectoryHeaderLength);
+        offset = _directoryStart + (_lumpIndex * _entrySize);
 
         _stream.Position = offset;
 
-        lump = Wad1DirectoryReader.Default.ReadEntry(_stream);
+        lump = _reader.ReadEntry(_stream);
 
         if (lump == null)
         {
@@ -140,5 +148,18 @@ namespace Cyotek.Data
     }
 
     #endregion Protected Methods
+
+    #region Private Methods
+
+    private bool TestFormat(Stream stream, IDirectoryReader reader, out DirectoryHeader header)
+    {
+      stream.Position = 0;
+
+      header = reader.ReadHeader(stream);
+
+      return header.Type != WadType.None;
+    }
+
+    #endregion Private Methods
   }
 }

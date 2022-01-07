@@ -18,28 +18,33 @@ namespace Cyotek.Data
 {
   internal static class CharHelpers
   {
-    #region Private Methods
+    #region Public Methods
 
-    public static string GetSafeName(byte[] entry)
+    public static string GetSafeName(byte[] entry, int start, int maximumLength)
     {
       int length;
 
-      length = 0;
+      // Starting from the end doesn't seem to always work - the name for progs.dat
+      // in the Quake PAK0.PAK file actually has a mix of zero and non-zero values
+      // in the name field, so you get a name like
+      // progs.datA?►E?w???w??⌂♥p?↕?↕@►E?w???w??⌂??↕
 
-      for (int i = WadConstants.DirectoryHeaderLength; i > WadConstants.LumpNameOffset; i--)
+      length = maximumLength;
+
+      for (int i = start; i < start + maximumLength; i++)
       {
-        if (entry[i - 1] != '\0')
+        if (entry[i] == '\0')
         {
-          length = i - WadConstants.LumpNameOffset;
+          length = i - start;
           break;
         }
       }
 
       return length > 0
-        ? Encoding.ASCII.GetString(entry, WadConstants.LumpNameOffset, length)
+        ? Encoding.ASCII.GetString(entry, start, length)
         : null;
     }
 
-    #endregion Private Methods
+    #endregion Public Methods
   }
 }

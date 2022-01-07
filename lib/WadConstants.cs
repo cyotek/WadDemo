@@ -18,12 +18,6 @@ namespace Cyotek.Data
   {
     #region Public Fields
 
-    public const byte DirectoryHeaderLength = 16;
-
-    public const byte DirectoryStartOffset = 8;
-
-    public const byte LumpCountOffset = 4;
-
     public const byte LumpNameLength = 8;
 
     public const byte LumpNameOffset = 8;
@@ -31,6 +25,28 @@ namespace Cyotek.Data
     public const byte LumpSizeOffset = 4;
 
     public const byte LumpStartOffset = 0;
+
+    public const byte PackDirectoryEntryNameLength = 56;
+
+    public const byte PackDirectoryEntryNameOffset = 0;
+
+    public const byte PackDirectoryEntrySize = 64;
+
+    public const byte PackDirectoryEntrySizeOffset = PackDirectoryEntryStartOffset + 4;
+
+    public const byte PackDirectoryEntryStartOffset = PackDirectoryEntryNameLength;
+
+    public const byte PackHeaderCountOffset = 8;
+
+    public const byte PackHeaderDirectoryOffset = 4;
+
+    public const byte PackHeaderLength = 12;
+
+    public const byte WadDirectoryEntrySize = 16;
+
+    public const byte WadHeaderCountOffset = 4;
+
+    public const byte WadHeaderDirectoryOffset = 8;
 
     public const byte WadHeaderLength = 12;
 

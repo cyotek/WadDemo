@@ -233,7 +233,7 @@ namespace Cyotek.Data
       bool result;
       long size;
 
-      size = WadConstants.WadHeaderLength + (_lumps.Count * WadConstants.DirectoryHeaderLength);
+      size = WadConstants.WadHeaderLength + (_lumps.Count * WadConstants.WadDirectoryEntrySize);
       result = false;
 
       for (int i = 0; i < _lumps.Count; i++)
