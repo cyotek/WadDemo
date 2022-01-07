@@ -14,6 +14,9 @@
 
 using System.IO;
 
+// Uses information from
+// https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_7.htm
+
 namespace Cyotek.Data
 {
   public sealed class Wad2DirectoryReader : IDirectoryReader
