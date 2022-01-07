@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-// Reading DOOM WAD files
+﻿// Reading DOOM WAD files
 // https://www.cyotek.com/blog/reading-doom-wad-files
 
 // Writing DOOM WAD files
@@ -13,9 +10,12 @@ using System.IO;
 // See LICENSE.TXT for the full text
 
 // Found this example useful?
-// https://www.paypal.me/cyotek
+// https://www.cyotek.com/contribute
 
-namespace Cyotek.Data.Wad
+using System;
+using System.IO;
+
+namespace Cyotek.Data
 {
   public class WadLump : IEquatable<WadLump>
   {

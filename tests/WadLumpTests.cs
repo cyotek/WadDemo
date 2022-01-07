@@ -12,7 +12,6 @@
 // Found this example useful?
 // https://www.cyotek.com/contribute
 
-using Cyotek.Data.Wad;
 using NUnit.Framework;
 using System.Collections.Generic;
 
