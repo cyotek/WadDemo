@@ -3,7 +3,8 @@ bin/
 obj/
 samples/**
 _NCrunch_*/
+packages/
 
 *.user
-
 !samples/*.bin
+launchSettings.json
