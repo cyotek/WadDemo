@@ -78,7 +78,7 @@ namespace Cyotek.Data.Tests
       {
         Assert.Fail("Expected value, but received null.");
       }
-      else if (expected != null && actual != null)
+      else if (expected != null)
       {
         byte[] expectedData;
         byte[] actualData;
@@ -86,6 +86,9 @@ namespace Cyotek.Data.Tests
         Assert.AreEqual(expected.Name, actual.Name, "Lump name does not match.");
         Assert.AreEqual(expected.Size, actual.Size, "Lump size does not match.");
         Assert.AreEqual(expected.Index, actual.Index, "Lump index does not match.");
+        Assert.AreEqual(expected.CompressionMode, actual.CompressionMode, nameof(WadLump.CompressionMode));
+        Assert.AreEqual(expected.UncompressedSize, actual.UncompressedSize, nameof(WadLump.UncompressedSize));
+        Assert.AreEqual(expected.Type, actual.Type, nameof(WadLump.Type));
 
         expectedData = new byte[expected.Size];
         actualData = new byte[actual.Size];
@@ -102,6 +105,13 @@ namespace Cyotek.Data.Tests
 
         CollectionAssert.AreEqual(expectedData, actualData);
       }
+    }
+
+    public static void AreEqual(DirectoryHeader expected, DirectoryHeader actual)
+    {
+      Assert.AreEqual(expected.Type, actual.Type, nameof(DirectoryHeader.Type));
+      Assert.AreEqual(expected.DirectoryOffset, actual.DirectoryOffset, nameof(DirectoryHeader.DirectoryOffset));
+      Assert.AreEqual(expected.EntryCount, actual.EntryCount, nameof(DirectoryHeader.EntryCount));
     }
 
     #endregion Public Methods

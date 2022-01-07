@@ -18,7 +18,7 @@ using System.IO;
 
 namespace Cyotek.Data
 {
-  public static class WadFormatRegistry
+  internal static class WadFormatRegistry
   {
     #region Private Fields
 
@@ -34,6 +34,7 @@ namespace Cyotek.Data
       WadFormatRegistry.RegisterReader(WadType.Internal, Wad1DirectoryReader.Default);
       WadFormatRegistry.RegisterReader(WadType.Patch, Wad1DirectoryReader.Default);
       WadFormatRegistry.RegisterReader(WadType.Pack, PackDirectoryReader.Default);
+      WadFormatRegistry.RegisterReader(WadType.Wad2, Wad2DirectoryReader.Default);
     }
 
     #endregion Public Constructors

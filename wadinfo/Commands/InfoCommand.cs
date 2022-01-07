@@ -38,7 +38,7 @@ namespace Cyotek.Tools.WadInfo.Commands
 
           while ((lump = reader.GetNextLump()) != null)
           {
-            Console.WriteLine("{0}: Offset {1}, Size {2}", lump.Name, lump.Offset, lump.Size);
+            Console.WriteLine("{0}: Offset {1}, Size {2}, Uncompressed Size {3}, Compression Mode {4}, Type {5}", lump.Name, lump.Offset, lump.Size, lump.UncompressedSize, lump.CompressionMode, (char)lump.Type);
           }
         }
       }

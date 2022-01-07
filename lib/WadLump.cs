@@ -21,6 +21,8 @@ namespace Cyotek.Data
   {
     #region Private Fields
 
+    private byte _compressionMode;
+
     private Stream _container;
 
     private int _index;
@@ -33,9 +35,19 @@ namespace Cyotek.Data
 
     private int _size;
 
+    private byte _type;
+
+    private int _uncompressedSize;
+
     #endregion Private Fields
 
     #region Public Properties
+
+    public byte CompressionMode
+    {
+      get => _compressionMode;
+      set => _compressionMode = value;
+    }
 
     public int Index
     {
@@ -61,6 +73,18 @@ namespace Cyotek.Data
       set => _size = value;
     }
 
+    public byte Type
+    {
+      get => _type;
+      set => _type = value;
+    }
+
+    public int UncompressedSize
+    {
+      get => _uncompressedSize;
+      set => _uncompressedSize = value;
+    }
+
     #endregion Public Properties
 
     #region Internal Properties
@@ -80,9 +104,12 @@ namespace Cyotek.Data
       return !(other is null)
          && (object.ReferenceEquals(this, other)
          || (
- string.Equals(_name, other._name)
- && _offset.Equals(other._offset)
- && _size.Equals(other._size)
+              string.Equals(_name, other._name)
+           && _offset.Equals(other._offset)
+           && _size.Equals(other._size)
+           && _compressionMode.Equals(other._compressionMode)
+           && _uncompressedSize.Equals(other._uncompressedSize)
+           && _type.Equals(other._type)
          ));
     }
 
@@ -102,6 +129,9 @@ namespace Cyotek.Data
       hashCode.Add(_name);
       hashCode.Add(_offset);
       hashCode.Add(_size);
+      hashCode.Add(_compressionMode);
+      hashCode.Add(_uncompressedSize);
+      hashCode.Add(_type);
 
       hash = hashCode.ToHashCode();
 #else
@@ -109,6 +139,9 @@ namespace Cyotek.Data
       hash = hash * 23 + _name?.GetHashCode() ?? 0;
       hash = hash * 23 + _offset.GetHashCode();
       hash = hash * 23 + _size.GetHashCode();
+      hash = hash * 23 + _compressionMode.GetHashCode();
+      hash = hash * 23 + _uncompressedSize.GetHashCode();
+      hash = hash * 23 + _type.GetHashCode();
 #endif
 
       return hash;

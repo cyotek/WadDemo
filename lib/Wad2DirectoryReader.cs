@@ -16,11 +16,11 @@ using System.IO;
 
 namespace Cyotek.Data
 {
-  public sealed class Wad1DirectoryReader : IDirectoryReader
+  public sealed class Wad2DirectoryReader : IDirectoryReader
   {
     #region Public Fields
 
-    public static readonly Wad1DirectoryReader Default = new Wad1DirectoryReader();
+    public static readonly Wad2DirectoryReader Default = new Wad2DirectoryReader();
 
     #endregion Public Fields
 
@@ -35,22 +35,24 @@ namespace Cyotek.Data
       Guard.ThrowIfUnreadableStream(stream, nameof(stream));
 
 #if NETCOREAPP2_1_OR_GREATER
-      buffer = System.Buffers.ArrayPool<byte>.Shared.Rent(WadConstants.WadDirectoryEntrySize);
+      buffer = System.Buffers.ArrayPool<byte>.Shared.Rent(WadConstants.Wad2EntryLength);
 #else
-      buffer = new byte[WadConstants.WadDirectoryEntrySize];
+      buffer = new byte[WadConstants.Wad2EntryLength];
 #endif
 
-      if (stream.Read(buffer, 0, WadConstants.WadDirectoryEntrySize) != WadConstants.WadDirectoryEntrySize)
+      if (stream.Read(buffer, 0, WadConstants.Wad2EntryLength) != WadConstants.Wad2EntryLength)
       {
         throw new InvalidDataException("Failed to read directory entry.");
       }
 
       result = new WadLump
       {
-        Offset = WordHelpers.GetInt32Le(buffer, WadConstants.LumpStartOffset),
-        Size = WordHelpers.GetInt32Le(buffer, WadConstants.LumpSizeOffset),
-        UncompressedSize = WordHelpers.GetInt32Le(buffer, WadConstants.LumpSizeOffset),
-        Name = CharHelpers.GetSafeName(buffer, WadConstants.LumpNameOffset, WadConstants.LumpNameLength)
+        Offset = WordHelpers.GetInt32Le(buffer, WadConstants.Wad2EntryStartOffset),
+        Size = WordHelpers.GetInt32Le(buffer, WadConstants.Wad2EntrySizeOffset),
+        UncompressedSize = WordHelpers.GetInt32Le(buffer, WadConstants.Wad2EntryUncompressedSizeOffset),
+        Type = buffer[WadConstants.Wad2EntryTypeOffset],
+        CompressionMode = buffer[WadConstants.Wad2EntryCompressionModeOffset],
+        Name = CharHelpers.GetSafeName(buffer, WadConstants.Wad2EntryNameOffset, WadConstants.Wad2EntryNameLength)
       };
 
 #if NETCOREAPP2_1_OR_GREATER
@@ -79,15 +81,13 @@ namespace Cyotek.Data
         throw new InvalidDataException("Failed to read header.");
       }
 
-      if (Wad1DirectoryReader.IsWadSignature(buffer))
+      if (Wad2DirectoryReader.IsWad2Signature(buffer))
       {
         WadType type;
         int directoryStart;
         int lumpCount;
 
-        type = buffer[0] == 'I'
-          ? WadType.Internal
-          : WadType.Patch;
+        type = WadType.Wad2;
         directoryStart = WordHelpers.GetInt32Le(buffer, WadConstants.WadHeaderDirectoryOffset);
         lumpCount = WordHelpers.GetInt32Le(buffer, WadConstants.WadHeaderCountOffset);
 
@@ -109,12 +109,12 @@ namespace Cyotek.Data
 
     #region Private Methods
 
-    private static bool IsWadSignature(byte[] buffer)
+    private static bool IsWad2Signature(byte[] buffer)
     {
-      return (buffer[0] == 'I' || buffer[0] == 'P')
-             && buffer[1] == 'W'
-             && buffer[2] == 'A'
-             && buffer[3] == 'D';
+      return buffer[0] == 'W'
+             && buffer[1] == 'A'
+             && buffer[2] == 'D'
+             && buffer[3] == '2';
     }
 
     #endregion Private Methods

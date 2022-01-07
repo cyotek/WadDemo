@@ -19,7 +19,7 @@ using System.IO;
 namespace Cyotek.Data.Tests
 {
   [TestFixture]
-  public class PackDirectoryReaderTests : TestBase
+  public class Wad2DirectoryReaderTests : TestBase
   {
     #region Public Properties
 
@@ -28,7 +28,7 @@ namespace Cyotek.Data.Tests
       get
       {
         yield return new TestCaseData("nfo.wad", DirectoryHeader.Empty).SetName("{m}Invalid");
-        yield return new TestCaseData(@"E:\Games\Quake\id1\PAK0.PAK", new DirectoryHeader(WadType.Pack, 0, 0)).SetName("{m}");
+        yield return new TestCaseData(@"T:\wad\gfx.wad", new DirectoryHeader(WadType.Wad2, 0, 0)).SetName("{m}");
       }
     }
 
@@ -45,7 +45,7 @@ namespace Cyotek.Data.Tests
       DirectoryHeader actual;
       Stream stream;
 
-      target = new PackDirectoryReader();
+      target = new Wad2DirectoryReader();
       stream = File.OpenRead(this.GetDataFileName(fileName));
 
       // act
@@ -63,8 +63,8 @@ namespace Cyotek.Data.Tests
       DirectoryHeader actual;
       Stream stream;
 
-      target = new PackDirectoryReader();
-      stream = File.OpenRead(this.GetDataFileName(@"E:\Games\Quake\id1\PAK0.PAK"));
+      target = new Wad2DirectoryReader();
+      stream = File.OpenRead(this.GetDataFileName(@"T:\wad\gfx.wad"));
 
 actual      =target.ReadHeader(stream);
 stream.Position = actual.DirectoryOffset;

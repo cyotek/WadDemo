@@ -50,6 +50,8 @@ namespace Cyotek.Data
 
     public WadReader(Stream stream, bool keepOpen)
     {
+      // TODO: Note much point having a registry with this bunch of hard coded nonsense
+      // 
       switch (WadFormatRegistry.GetFormat(stream, out DirectoryHeader header))
       {
         case WadType.Internal:
@@ -61,6 +63,11 @@ namespace Cyotek.Data
         case WadType.Pack:
           _reader = PackDirectoryReader.Default;
           _entrySize = WadConstants.PackDirectoryEntrySize;
+          break;
+
+        case WadType.Wad2:
+          _reader = Wad2DirectoryReader.Default;
+          _entrySize = WadConstants.Wad2EntryLength;
           break;
 
         default:

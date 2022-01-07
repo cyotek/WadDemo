@@ -52,7 +52,8 @@ namespace Cyotek.Data
       {
         Name = CharHelpers.GetSafeName(buffer, WadConstants.PackDirectoryEntryNameOffset, WadConstants.PackDirectoryEntryNameLength),
         Offset = WordHelpers.GetInt32Le(buffer, WadConstants.PackDirectoryEntryStartOffset),
-        Size = WordHelpers.GetInt32Le(buffer, WadConstants.PackDirectoryEntrySizeOffset)
+        Size = WordHelpers.GetInt32Le(buffer, WadConstants.PackDirectoryEntrySizeOffset),
+        UncompressedSize = WordHelpers.GetInt32Le(buffer, WadConstants.PackDirectoryEntrySizeOffset)
       };
 
 #if NETCOREAPP2_1_OR_GREATER

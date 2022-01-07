@@ -368,14 +368,21 @@ namespace Cyotek.Demo
 
     private void OpenWad(string fileName)
     {
-      _wadFile = WadFile.LoadFrom(fileName);
+      try
+      {
+        _wadFile = WadFile.LoadFrom(fileName);
 
-      this.FillItems();
+        this.FillItems();
 
-      _fileName = fileName;
+        _fileName = fileName;
 
-      this.UpdateStatus();
-      this.UpdateWindowTitle();
+        this.UpdateStatus();
+        this.UpdateWindowTitle();
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(string.Format("Failed to open file. {0}", ex.Message), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
     }
 
     private void OriginalOrderToolStripMenuItem_Click(object sender, EventArgs e)

@@ -42,6 +42,22 @@ namespace Cyotek.Data
 
     public const byte PackHeaderLength = 12;
 
+    public const byte Wad2EntryCompressionModeOffset = 13;
+
+    public const byte Wad2EntryLength = 32;
+
+    public const byte Wad2EntryNameLength = 16;
+
+    public const byte Wad2EntryNameOffset = 16;
+
+    public const byte Wad2EntrySizeOffset = 4;
+
+    public const byte Wad2EntryStartOffset = 0;
+
+    public const byte Wad2EntryTypeOffset = 12;
+
+    public const byte Wad2EntryUncompressedSizeOffset = 8;
+
     public const byte WadDirectoryEntrySize = 16;
 
     public const byte WadHeaderCountOffset = 4;
