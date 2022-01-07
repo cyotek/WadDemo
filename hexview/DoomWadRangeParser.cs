@@ -1,19 +1,19 @@
-﻿using Cyotek.Data.Wad;
-using Cyotek.Demo.Windows.Forms;
-using System;
-using System.Drawing;
-using System.IO;
-
-// Reading DOOM WAD files
+﻿// Reading DOOM WAD files
 // https://www.cyotek.com/blog/reading-doom-wad-files
 
-// Copyright © 2020 Cyotek Ltd. All Rights Reserved.
+// Copyright © 2020-2022 Cyotek Ltd. All Rights Reserved.
 
 // This work is licensed under the MIT License.
 // See LICENSE.TXT for the full text
 
 // Found this example useful?
-// https://www.paypal.me/cyotek
+// https://www.cyotek.com/contribute
+
+using Cyotek.Data;
+using Cyotek.Demo.Windows.Forms;
+using System;
+using System.Drawing;
+using System.IO;
 
 namespace Cyotek.Demo.Wad
 {
