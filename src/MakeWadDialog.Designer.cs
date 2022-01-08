@@ -28,61 +28,29 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.patchRadioButton = new System.Windows.Forms.RadioButton();
-      this.internalRadioButton = new System.Windows.Forms.RadioButton();
-      this.label1 = new System.Windows.Forms.Label();
+      System.Windows.Forms.Label fileNameLabel;
+      System.Windows.Forms.Label indexFileNameLabel;
+      System.Windows.Forms.Label typeLabel;
       this.fileNameTextBox = new System.Windows.Forms.TextBox();
       this.pathBrowseButton = new System.Windows.Forms.Button();
       this.createButton = new System.Windows.Forms.Button();
       this.cancelButton = new System.Windows.Forms.Button();
-      this.label2 = new System.Windows.Forms.Label();
       this.indexFileNameTextBox = new System.Windows.Forms.TextBox();
       this.indexBrowseButton = new System.Windows.Forms.Button();
-      this.groupBox1.SuspendLayout();
+      this.typeComboBox = new System.Windows.Forms.ComboBox();
+      fileNameLabel = new System.Windows.Forms.Label();
+      indexFileNameLabel = new System.Windows.Forms.Label();
+      typeLabel = new System.Windows.Forms.Label();
       this.SuspendLayout();
       // 
-      // groupBox1
+      // fileNameLabel
       // 
-      this.groupBox1.Controls.Add(this.patchRadioButton);
-      this.groupBox1.Controls.Add(this.internalRadioButton);
-      this.groupBox1.Location = new System.Drawing.Point(15, 66);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(123, 70);
-      this.groupBox1.TabIndex = 6;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Type";
-      // 
-      // patchRadioButton
-      // 
-      this.patchRadioButton.AutoSize = true;
-      this.patchRadioButton.Location = new System.Drawing.Point(6, 42);
-      this.patchRadioButton.Name = "patchRadioButton";
-      this.patchRadioButton.Size = new System.Drawing.Size(53, 17);
-      this.patchRadioButton.TabIndex = 1;
-      this.patchRadioButton.Text = "&Patch";
-      this.patchRadioButton.UseVisualStyleBackColor = true;
-      // 
-      // internalRadioButton
-      // 
-      this.internalRadioButton.AutoSize = true;
-      this.internalRadioButton.Checked = true;
-      this.internalRadioButton.Location = new System.Drawing.Point(6, 19);
-      this.internalRadioButton.Name = "internalRadioButton";
-      this.internalRadioButton.Size = new System.Drawing.Size(60, 17);
-      this.internalRadioButton.TabIndex = 0;
-      this.internalRadioButton.TabStop = true;
-      this.internalRadioButton.Text = "&Internal";
-      this.internalRadioButton.UseVisualStyleBackColor = true;
-      // 
-      // label1
-      // 
-      this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(12, 17);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(52, 13);
-      this.label1.TabIndex = 0;
-      this.label1.Text = "&Filename:";
+      fileNameLabel.AutoSize = true;
+      fileNameLabel.Location = new System.Drawing.Point(12, 17);
+      fileNameLabel.Name = "fileNameLabel";
+      fileNameLabel.Size = new System.Drawing.Size(52, 13);
+      fileNameLabel.TabIndex = 0;
+      fileNameLabel.Text = "&Filename:";
       // 
       // fileNameTextBox
       // 
@@ -110,7 +78,7 @@
       this.createButton.Location = new System.Drawing.Point(431, 83);
       this.createButton.Name = "createButton";
       this.createButton.Size = new System.Drawing.Size(75, 23);
-      this.createButton.TabIndex = 7;
+      this.createButton.TabIndex = 8;
       this.createButton.Text = "&Create";
       this.createButton.UseVisualStyleBackColor = true;
       this.createButton.Click += new System.EventHandler(this.ExtractButton_Click);
@@ -122,19 +90,19 @@
       this.cancelButton.Location = new System.Drawing.Point(431, 112);
       this.cancelButton.Name = "cancelButton";
       this.cancelButton.Size = new System.Drawing.Size(75, 23);
-      this.cancelButton.TabIndex = 8;
+      this.cancelButton.TabIndex = 9;
       this.cancelButton.Text = "Cancel";
       this.cancelButton.UseVisualStyleBackColor = true;
       this.cancelButton.Click += new System.EventHandler(this.CancelButton_Click);
       // 
-      // label2
+      // indexFileNameLabel
       // 
-      this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(12, 43);
-      this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(55, 13);
-      this.label2.TabIndex = 3;
-      this.label2.Text = "I&ndex File:";
+      indexFileNameLabel.AutoSize = true;
+      indexFileNameLabel.Location = new System.Drawing.Point(12, 43);
+      indexFileNameLabel.Name = "indexFileNameLabel";
+      indexFileNameLabel.Size = new System.Drawing.Size(55, 13);
+      indexFileNameLabel.TabIndex = 3;
+      indexFileNameLabel.Text = "I&ndex File:";
       // 
       // indexFileNameTextBox
       // 
@@ -156,6 +124,30 @@
       this.indexBrowseButton.UseVisualStyleBackColor = true;
       this.indexBrowseButton.Click += new System.EventHandler(this.IndexBrowseButton_Click);
       // 
+      // typeLabel
+      // 
+      typeLabel.AutoSize = true;
+      typeLabel.Location = new System.Drawing.Point(12, 69);
+      typeLabel.Name = "typeLabel";
+      typeLabel.Size = new System.Drawing.Size(34, 13);
+      typeLabel.TabIndex = 6;
+      typeLabel.Text = "&Type:";
+      // 
+      // typeComboBox
+      // 
+      this.typeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.typeComboBox.FormattingEnabled = true;
+      this.typeComboBox.Items.AddRange(new object[] {
+            "Patch",
+            "Internal",
+            "Wad2",
+            "Wad3",
+            "Pack"});
+      this.typeComboBox.Location = new System.Drawing.Point(73, 66);
+      this.typeComboBox.Name = "typeComboBox";
+      this.typeComboBox.Size = new System.Drawing.Size(168, 21);
+      this.typeComboBox.TabIndex = 7;
+      // 
       // MakeWadDialog
       // 
       this.AcceptButton = this.createButton;
@@ -163,36 +155,30 @@
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.cancelButton;
       this.ClientSize = new System.Drawing.Size(518, 147);
+      this.Controls.Add(typeLabel);
+      this.Controls.Add(this.typeComboBox);
       this.Controls.Add(this.indexBrowseButton);
       this.Controls.Add(this.indexFileNameTextBox);
-      this.Controls.Add(this.label2);
+      this.Controls.Add(indexFileNameLabel);
       this.Controls.Add(this.cancelButton);
       this.Controls.Add(this.createButton);
       this.Controls.Add(this.pathBrowseButton);
       this.Controls.Add(this.fileNameTextBox);
-      this.Controls.Add(this.label1);
-      this.Controls.Add(this.groupBox1);
+      this.Controls.Add(fileNameLabel);
       this.Name = "MakeWadDialog";
       this.Text = "Create";
-      this.groupBox1.ResumeLayout(false);
-      this.groupBox1.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
     }
 
     #endregion
-
-    private System.Windows.Forms.GroupBox groupBox1;
-    private System.Windows.Forms.RadioButton patchRadioButton;
-    private System.Windows.Forms.RadioButton internalRadioButton;
-    private System.Windows.Forms.Label label1;
     private System.Windows.Forms.TextBox fileNameTextBox;
     private System.Windows.Forms.Button pathBrowseButton;
     private System.Windows.Forms.Button createButton;
     private System.Windows.Forms.Button cancelButton;
-    private System.Windows.Forms.Label label2;
     private System.Windows.Forms.TextBox indexFileNameTextBox;
     private System.Windows.Forms.Button indexBrowseButton;
+    private System.Windows.Forms.ComboBox typeComboBox;
   }
 }

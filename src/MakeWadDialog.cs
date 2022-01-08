@@ -47,6 +47,17 @@ namespace Cyotek.Demo.Wad
 
     #endregion Public Properties
 
+    #region Protected Methods
+
+    protected override void OnLoad(EventArgs e)
+    {
+      base.OnLoad(e);
+
+      typeComboBox.SelectedIndex = 0;
+    }
+
+    #endregion Protected Methods
+
     #region Private Methods
 
     private void CancelButton_Click(object sender, EventArgs e)
@@ -93,7 +104,7 @@ namespace Cyotek.Demo.Wad
 
     private WadType GetWadType()
     {
-      return internalRadioButton.Checked ? WadType.Internal : WadType.Patch;
+      return (WadType)Enum.Parse(typeof(WadType), (string)typeComboBox.SelectedItem);
     }
 
     private void IndexBrowseButton_Click(object sender, EventArgs e)
