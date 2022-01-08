@@ -70,6 +70,11 @@ namespace Cyotek.Data
           _entrySize = WadConstants.Wad2EntryLength;
           break;
 
+        case WadType.Wad3:
+          _reader = Wad3DirectoryReader.Default;
+          _entrySize = WadConstants.Wad3EntryLength;
+          break;
+
         default:
           throw new InvalidDataException("Stream does not appear to be a WAD file.");
       }

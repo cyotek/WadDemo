@@ -24,6 +24,8 @@ namespace Cyotek.Data
 
     Pack,
 
-    Wad2
+    Wad2,
+
+    Wad3
   }
 }

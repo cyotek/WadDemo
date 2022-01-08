@@ -35,6 +35,7 @@ namespace Cyotek.Data
       WadFormatRegistry.RegisterReader(WadType.Patch, Wad1DirectoryReader.Default);
       WadFormatRegistry.RegisterReader(WadType.Pack, PackDirectoryReader.Default);
       WadFormatRegistry.RegisterReader(WadType.Wad2, Wad2DirectoryReader.Default);
+      WadFormatRegistry.RegisterReader(WadType.Wad3, Wad3DirectoryReader.Default);
     }
 
     #endregion Public Constructors

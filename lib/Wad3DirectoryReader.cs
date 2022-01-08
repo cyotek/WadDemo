@@ -15,15 +15,15 @@
 using System.IO;
 
 // Uses information from
-// https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_7.htm
+// http://wiki.xentax.com/index.php/WAD_WAD3
 
 namespace Cyotek.Data
 {
-  public sealed class Wad2DirectoryReader : IDirectoryReader
+  public sealed class Wad3DirectoryReader : IDirectoryReader
   {
     #region Public Fields
 
-    public static readonly Wad2DirectoryReader Default = new Wad2DirectoryReader();
+    public static readonly Wad3DirectoryReader Default = new Wad3DirectoryReader();
 
     #endregion Public Fields
 
@@ -38,24 +38,24 @@ namespace Cyotek.Data
       Guard.ThrowIfUnreadableStream(stream, nameof(stream));
 
 #if NETCOREAPP2_1_OR_GREATER
-      buffer = System.Buffers.ArrayPool<byte>.Shared.Rent(WadConstants.Wad2EntryLength);
+      buffer = System.Buffers.ArrayPool<byte>.Shared.Rent(WadConstants.Wad3EntryLength);
 #else
-      buffer = new byte[WadConstants.Wad2EntryLength];
+      buffer = new byte[WadConstants.Wad3EntryLength];
 #endif
 
-      if (stream.Read(buffer, 0, WadConstants.Wad2EntryLength) != WadConstants.Wad2EntryLength)
+      if (stream.Read(buffer, 0, WadConstants.Wad3EntryLength) != WadConstants.Wad3EntryLength)
       {
         throw new InvalidDataException("Failed to read directory entry.");
       }
 
       result = new WadLump
       {
-        Offset = WordHelpers.GetInt32Le(buffer, WadConstants.Wad2EntryStartOffset),
-        Size = WordHelpers.GetInt32Le(buffer, WadConstants.Wad2EntrySizeOffset),
-        UncompressedSize = WordHelpers.GetInt32Le(buffer, WadConstants.Wad2EntryUncompressedSizeOffset),
-        Type = buffer[WadConstants.Wad2EntryTypeOffset],
-        CompressionMode = buffer[WadConstants.Wad2EntryCompressionModeOffset],
-        Name = CharHelpers.GetSafeName(buffer, WadConstants.Wad2EntryNameOffset, WadConstants.Wad2EntryNameLength)
+        Offset = WordHelpers.GetInt32Le(buffer, WadConstants.Wad3EntryStartOffset),
+        Size = WordHelpers.GetInt32Le(buffer, WadConstants.Wad3EntrySizeOffset),
+        UncompressedSize = WordHelpers.GetInt32Le(buffer, WadConstants.Wad3EntryUncompressedSizeOffset),
+        Type = buffer[WadConstants.Wad3EntryTypeOffset],
+        CompressionMode = buffer[WadConstants.Wad3EntryCompressionModeOffset],
+        Name = CharHelpers.GetSafeName(buffer, WadConstants.Wad3EntryNameOffset, WadConstants.Wad3EntryNameLength)
       };
 
 #if NETCOREAPP2_1_OR_GREATER
@@ -84,13 +84,13 @@ namespace Cyotek.Data
         throw new InvalidDataException("Failed to read header.");
       }
 
-      if (Wad2DirectoryReader.IsWad2Signature(buffer))
+      if (Wad3DirectoryReader.IsWad3Signature(buffer))
       {
         WadType type;
         int directoryStart;
         int lumpCount;
 
-        type = WadType.Wad2;
+        type = WadType.Wad3;
         directoryStart = WordHelpers.GetInt32Le(buffer, WadConstants.WadHeaderDirectoryOffset);
         lumpCount = WordHelpers.GetInt32Le(buffer, WadConstants.WadHeaderCountOffset);
 
@@ -112,12 +112,12 @@ namespace Cyotek.Data
 
     #region Private Methods
 
-    private static bool IsWad2Signature(byte[] buffer)
+    private static bool IsWad3Signature(byte[] buffer)
     {
       return buffer[0] == 'W'
              && buffer[1] == 'A'
              && buffer[2] == 'D'
-             && buffer[3] == '2';
+             && buffer[3] == '3';
     }
 
     #endregion Private Methods
