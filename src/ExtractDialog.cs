@@ -1,27 +1,29 @@
-﻿using Cyotek.Demo.Windows.Forms;
-using System;
-using System.IO;
-using System.Windows.Forms;
-
-// Reading DOOM WAD files
+﻿// Reading DOOM WAD files
 // https://www.cyotek.com/blog/reading-doom-wad-files
 
 // Writing DOOM WAD files
 // https://www.cyotek.com/blog/writing-doom-wad-files
 
-// Copyright © 2020 Cyotek Ltd. All Rights Reserved.
+// Copyright © 2020-2022 Cyotek Ltd. All Rights Reserved.
 
 // This work is licensed under the MIT License.
 // See LICENSE.TXT for the full text
 
 // Found this example useful?
-// https://www.paypal.me/cyotek
+// https://www.cyotek.com/contribute
+
+using Cyotek.Demo.Windows.Forms;
+using System;
+using System.IO;
+using System.Windows.Forms;
 
 namespace Cyotek.Demo.Wad
 {
   internal partial class ExtractDialog : BaseForm
   {
     #region Private Fields
+
+    private bool _allowSelection;
 
     private ExtractOptions _options;
 
@@ -32,11 +34,19 @@ namespace Cyotek.Demo.Wad
     public ExtractDialog()
     {
       this.InitializeComponent();
+
+      _allowSelection = true;
     }
 
     #endregion Public Constructors
 
     #region Public Properties
+
+    public bool AllowSelection
+    {
+      get => _allowSelection;
+      set => _allowSelection = value;
+    }
 
     public ExtractOptions Options
     {
@@ -45,6 +55,21 @@ namespace Cyotek.Demo.Wad
     }
 
     #endregion Public Properties
+
+    #region Protected Methods
+
+    protected override void OnLoad(EventArgs e)
+    {
+      base.OnLoad(e);
+
+      if (!_allowSelection)
+      {
+        selectedFilesRadioButton.Enabled = false;
+        allFilesRadioButton.Checked = true;
+      }
+    }
+
+    #endregion Protected Methods
 
     #region Private Methods
 

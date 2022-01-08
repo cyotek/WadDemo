@@ -144,14 +144,9 @@ namespace Cyotek.Demo
 
       this.SetStatus("Extracting...");
 
-      if (options.ExtractMode == ExtractMode.All)
-      {
-        results = this.ExtractAll(options);
-      }
-      else
-      {
-        results = this.ExtractSelection(options);
-      }
+      results = options.ExtractMode == ExtractMode.All
+        ? this.ExtractAll(options)
+        : this.ExtractSelection(options);
 
       if (options.CreateIndex)
       {
@@ -220,7 +215,10 @@ namespace Cyotek.Demo
 
     private void ExtractFileToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      using (ExtractDialog dialog = new ExtractDialog())
+      using (ExtractDialog dialog = new ExtractDialog
+      {
+        AllowSelection = namesListBox.SelectedIndices.Count > 0
+      })
       {
         if (dialog.ShowDialog(this) == DialogResult.OK)
         {
