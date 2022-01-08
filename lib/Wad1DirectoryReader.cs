@@ -12,11 +12,11 @@
 // Found this example useful?
 // https://www.cyotek.com/contribute
 
-using System.IO;
+using System;
 
 namespace Cyotek.Data
 {
-  public sealed class Wad1DirectoryReader : IDirectoryReader
+  public sealed class Wad1DirectoryReader : WadDirectoryReader
   {
     #region Public Fields
 
@@ -24,99 +24,49 @@ namespace Cyotek.Data
 
     #endregion Public Fields
 
-    #region Public Methods
+    #region Protected Properties
 
-    public WadLump ReadEntry(Stream stream)
+    protected override byte DirectoryEntryDataOffset => WadConstants.LumpStartOffset;
+
+    protected override byte DirectoryEntryLength => WadConstants.WadDirectoryEntrySize;
+
+    protected override byte DirectoryEntryNameLength => WadConstants.LumpNameLength;
+
+    protected override byte DirectoryEntryNameOffset => WadConstants.LumpNameOffset;
+
+    protected override byte DirectoryEntrySizeOffset => WadConstants.LumpSizeOffset;
+
+    protected override byte DirectoryEntryUncompressedSizeOffset => throw new NotSupportedException();
+
+    protected override byte HeaderCountOffset => WadConstants.WadHeaderCountOffset;
+
+    protected override byte HeaderDirectoryOffset => WadConstants.WadHeaderDirectoryOffset;
+
+    protected override byte HeaderLength => WadConstants.WadHeaderLength;
+
+    protected override byte[] SignatureBytes => throw new NotSupportedException();
+
+    #endregion Protected Properties
+
+    #region Protected Methods
+
+    protected override int GetDirectoryEntryUncompressedSize(byte[] buffer) => this.GetDirectoryEntrySize(buffer);
+
+    protected override WadType GetType(byte[] buffer)
     {
-      WadLump result;
-      byte[] buffer;
-
-      Guard.ThrowIfNull(stream, nameof(stream));
-      Guard.ThrowIfUnreadableStream(stream, nameof(stream));
-
-#if NETCOREAPP2_1_OR_GREATER
-      buffer = System.Buffers.ArrayPool<byte>.Shared.Rent(WadConstants.WadDirectoryEntrySize);
-#else
-      buffer = new byte[WadConstants.WadDirectoryEntrySize];
-#endif
-
-      if (stream.Read(buffer, 0, WadConstants.WadDirectoryEntrySize) != WadConstants.WadDirectoryEntrySize)
-      {
-        throw new InvalidDataException("Failed to read directory entry.");
-      }
-
-      result = new WadLump
-      {
-        Offset = WordHelpers.GetInt32Le(buffer, WadConstants.LumpStartOffset),
-        Size = WordHelpers.GetInt32Le(buffer, WadConstants.LumpSizeOffset),
-        UncompressedSize = WordHelpers.GetInt32Le(buffer, WadConstants.LumpSizeOffset),
-        Name = CharHelpers.GetSafeName(buffer, WadConstants.LumpNameOffset, WadConstants.LumpNameLength)
-      };
-
-#if NETCOREAPP2_1_OR_GREATER
-      System.Buffers.ArrayPool<byte>.Shared.Return(buffer);
-#endif
-
-      return result;
-    }
-
-    public DirectoryHeader ReadHeader(Stream stream)
-    {
-      DirectoryHeader result;
-      byte[] buffer;
-
-      Guard.ThrowIfNull(stream, nameof(stream));
-      Guard.ThrowIfUnreadableStream(stream, nameof(stream));
-
-#if NETCOREAPP2_1_OR_GREATER
-      buffer = System.Buffers.ArrayPool<byte>.Shared.Rent(WadConstants.WadHeaderLength);
-#else
-      buffer = new byte[WadConstants.WadHeaderLength];
-#endif
-
-      if (stream.Read(buffer, 0, WadConstants.WadHeaderLength) != WadConstants.WadHeaderLength)
-      {
-        throw new InvalidDataException("Failed to read header.");
-      }
-
-      if (Wad1DirectoryReader.IsWadSignature(buffer))
-      {
-        WadType type;
-        int directoryStart;
-        int lumpCount;
-
-        type = buffer[0] == 'I'
+      return buffer[0] == 'I'
           ? WadType.Internal
           : WadType.Patch;
-        directoryStart = WordHelpers.GetInt32Le(buffer, WadConstants.WadHeaderDirectoryOffset);
-        lumpCount = WordHelpers.GetInt32Le(buffer, WadConstants.WadHeaderCountOffset);
-
-        result = new DirectoryHeader(type, directoryStart, lumpCount);
-      }
-      else
-      {
-        result = DirectoryHeader.Empty;
-      }
-
-#if NETCOREAPP2_1_OR_GREATER
-      System.Buffers.ArrayPool<byte>.Shared.Return(buffer);
-#endif
-
-      return result;
     }
 
-    #endregion Public Methods
-
-    #region Private Methods
-
-    private static bool IsWadSignature(byte[] buffer)
+    protected override bool IsValidSignature(byte[] buffer)
     {
       return (buffer[0] == 'I' || buffer[0] == 'P')
-             && buffer[1] == 'W'
-             && buffer[2] == 'A'
-             && buffer[3] == 'D';
+                   && buffer[1] == 'W'
+                   && buffer[2] == 'A'
+                   && buffer[3] == 'D';
     }
 
-    #endregion Private Methods
+    #endregion Protected Methods
   }
 }
