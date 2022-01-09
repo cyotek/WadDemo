@@ -84,13 +84,19 @@ namespace Cyotek.Data
       return result;
     }
 
-    public void AddFile(string name, string fileName)
+    public WadLump AddFile(string name, string fileName)
     {
-      _lumps.Add(new WadLump
+      WadLump lump;
+
+      lump = new WadLump
       {
         Name = name,
         PendingFileName = fileName
-      });
+      };
+
+      _lumps.Add(lump);
+
+      return lump;
     }
 
     public WadLump Find(string name)
@@ -200,7 +206,7 @@ namespace Cyotek.Data
             WadLump lump;
 
             lump = _lumps[i];
-            output.PutNextLump(lump.Name);
+            output.PutNextLump(lump);
 
             using (Stream input = lump.GetInputStream())
             {

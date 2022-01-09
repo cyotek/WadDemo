@@ -87,7 +87,7 @@ namespace Cyotek.Data
     {
       if (!_writtenDirectory)
       {
-        this.FinaliseLump();
+        this.FinalizeLump();
         this.WriteDirectory();
       }
 
@@ -97,20 +97,26 @@ namespace Cyotek.Data
     public void PutNextLump(string name)
     {
       Guard.ThrowIfNullOrEmpty(name, nameof(name));
-      Guard.ThrowIfOutOfBounds(name.Length, 1, WadConstants.LumpNameLength, "Name must be between 1 and 8 characters in length.", nameof(name));
+
+      this.PutNextLump(new WadLump
+      {
+        Name = name
+      });
+    }
+
+    public void PutNextLump(WadLump lump)
+    {      //Guard.ThrowIfOutOfBounds(name.Length, 1, WadConstants.LumpNameLength, "Name must be between 1 and 8 characters in length.", nameof(name));
 
       if (_writtenDirectory)
       {
         throw new InvalidOperationException("Directory has been written.");
       }
 
-      this.FinaliseLump();
+      this.FinalizeLump();
 
-      _lumps.Add(new WadLump
-      {
-        Name = name,
-        Offset = (int)_output.Position
-      });
+      lump.Offset = (int)_output.Position;
+
+      _lumps.Add(lump);
     }
 
     public override int Read(byte[] buffer, int offset, int count)
@@ -151,7 +157,7 @@ namespace Cyotek.Data
 
     #region Private Methods
 
-    private void FinaliseLump()
+    private void FinalizeLump()
     {
       if (_lumps.Count > 0)
       {
@@ -160,6 +166,11 @@ namespace Cyotek.Data
         lump = _lumps[_lumps.Count - 1];
 
         lump.Size = (int)_output.Position - lump.Offset;
+
+        if (lump.UncompressedSize == 0)
+        {
+          lump.UncompressedSize = lump.Size;
+        }
       }
     }
 
