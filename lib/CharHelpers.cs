@@ -53,6 +53,8 @@ namespace Cyotek.Data
         ? 0
         : value.Length;
 
+      Guard.ThrowIfOutOfBounds(valueLength, 0, maximumLength, "Name is too long.", nameof(value));
+
       for (int i = 0; i < valueLength; i++)
       {
         buffer[start + i] = (byte)value[i];
