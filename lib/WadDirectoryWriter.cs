@@ -102,7 +102,7 @@ namespace Cyotek.Data
 
     protected virtual void SetDirectoryEntryCompressionMode(byte[] buffer, WadLump directoryEntry)
     {
-      WordHelpers.PutInt32Le(directoryEntry.CompressionMode, buffer, this.DirectoryEntryCompressionModeOffset);
+      buffer[this.DirectoryEntryCompressionModeOffset] = directoryEntry.CompressionMode;
     }
 
     protected virtual void SetDirectoryEntryDataOffset(byte[] buffer, WadLump directoryEntry)
@@ -112,7 +112,7 @@ namespace Cyotek.Data
 
     protected virtual void SetDirectoryEntryFileType(byte[] buffer, WadLump directoryEntry)
     {
-      WordHelpers.PutInt32Le(directoryEntry.Type, buffer, this.DirectoryEntryFileTypeOffset);
+      buffer[this.DirectoryEntryFileTypeOffset] = directoryEntry.Type;
     }
 
     protected virtual void SetDirectoryEntryName(byte[] buffer, WadLump directoryEntry)
