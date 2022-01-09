@@ -81,13 +81,13 @@ namespace Cyotek.Data.Tests
       return output;
     }
 
-    protected Stream CreateSampleWad()
+    protected Stream CreateSampleWad(WadType wadType)
     {
       MemoryStream output;
 
       output = new MemoryStream();
 
-      using (WadOutputStream target = new WadOutputStream(output))
+      using (WadOutputStream target = new WadOutputStream(output, wadType))
       {
         using (BinaryWriter writer = new BinaryWriter(target, Encoding.UTF8, true))
         {
@@ -105,7 +105,7 @@ namespace Cyotek.Data.Tests
       return output;
     }
 
-    protected Stream CreateUnoptomizedSampleWad()
+    protected Stream CreateUnoptimizedSampleWad()
     {
       MemoryStream output;
       byte[] header;

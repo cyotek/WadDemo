@@ -23,18 +23,158 @@ namespace Cyotek.Data.Tests
   {
     #region Public Properties
 
+    public static IEnumerable<TestCaseData> ReadEntryTestCaseSource
+    {
+      get
+      {
+        yield return new TestCaseData("nfo2.wad", 1, new WadLump { Name = "PHOTO1", Size = 122, UncompressedSize = 122, CompressionMode = 1, Type = 2 }).SetName("{m}First");
+        yield return new TestCaseData("nfo2.wad", 3, new WadLump { Name = "PHOTO5", Size = 135, UncompressedSize = 135, Type = 80 }).SetName("{m}Second");
+      }
+    }
+
     public static IEnumerable<TestCaseData> ReadHeaderTestCaseSource
     {
       get
       {
-        yield return new TestCaseData("nfo.wad", DirectoryHeader.Empty).SetName("{m}Invalid");
-        yield return new TestCaseData(@"T:\wad\gfx.wad", new DirectoryHeader(WadType.Wad2, 0, 0)).SetName("{m}");
+        yield return new TestCaseData("nfo2.wad", new DirectoryHeader(WadType.Wad2, 391, 3)).SetName("{m}");
+        yield return new TestCaseData("photo1.jpg", DirectoryHeader.Empty).SetName("{m}Invalid");
       }
     }
 
     #endregion Public Properties
 
     #region Public Methods
+
+    [Test]
+    public void ReadEntryTest()
+    {
+      // arrange
+      IDirectoryReader target;
+      byte[] buffer;
+      MemoryStream stream;
+      WadLump expected;
+      WadLump actual;
+
+      target = new Wad2DirectoryReader();
+
+      buffer = new byte[]
+      {
+        12,
+        0,
+        0,
+        0,
+        72,
+        2,
+        0,
+        0,
+        72,
+        2,
+        0,
+        0,
+        66,
+        0,
+        0,
+        0,
+        78,
+        85,
+        77,
+        95,
+        48,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      };
+      stream = new MemoryStream(buffer, true);
+
+      expected = new WadLump
+      {
+        Name = "NUM_0",
+        Size = 584,
+        Offset = 12,
+        UncompressedSize = 584,
+        Type = 66
+      };
+
+      // act
+      actual = target.ReadEntry(stream);
+
+      // assert
+      WadAssert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    [TestCaseSource(nameof(ReadEntryTestCaseSource))]
+    public void ReadEntryTestCases(string fileName, int iterations, WadLump expected)
+    {
+      // arrange
+      IDirectoryReader target;
+      WadLump actual;
+      DirectoryHeader header;
+      Stream stream;
+
+      target = new Wad2DirectoryReader();
+      stream = File.OpenRead(this.GetDataFileName(fileName));
+
+      header = target.ReadHeader(stream);
+      stream.Position = header.DirectoryOffset;
+
+      actual = null;
+
+      // act
+      for (int i = 0; i < iterations; i++)
+      {
+        actual = target.ReadEntry(stream);
+      }
+
+      // assert
+      WadAssert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public void ReadHeaderTest()
+    {
+      // arrange
+      IDirectoryReader target;
+      byte[] buffer;
+      MemoryStream stream;
+      DirectoryHeader expected;
+      DirectoryHeader actual;
+
+      target = new Wad2DirectoryReader();
+
+      buffer = new byte[]
+      {
+        87,
+        65,
+        68,
+        50,
+        54,
+        131,
+        137,
+        0,
+        145,
+        5,
+        0,
+        0
+      };
+      stream = new MemoryStream(buffer, false);
+
+      expected = new DirectoryHeader(WadType.Wad2, 1425, 09012022);
+
+      // act
+      actual = target.ReadHeader(stream);
+
+      // assert
+      WadAssert.AreEqual(expected, actual);
+    }
 
     [Test]
     [TestCaseSource(nameof(ReadHeaderTestCaseSource))]
@@ -54,29 +194,6 @@ namespace Cyotek.Data.Tests
       // assert
       WadAssert.AreEqual(expected, actual);
     }
-
-    [Test]
-    public void TestNameTest()
-    {
-      // arrange
-      IDirectoryReader target;
-      DirectoryHeader actual;
-      Stream stream;
-
-      target = new Wad2DirectoryReader();
-      stream = File.OpenRead(this.GetDataFileName(@"T:\wad\gfx.wad"));
-
-actual      =target.ReadHeader(stream);
-stream.Position = actual.DirectoryOffset;
-      
-      // act
-var x=      target.ReadEntry(stream);
-
-      // assert
-      Assert.Fail();
-    }
-
-
 
     #endregion Public Methods
   }

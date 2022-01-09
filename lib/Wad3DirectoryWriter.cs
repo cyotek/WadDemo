@@ -12,18 +12,21 @@
 // Found this example useful?
 // https://www.cyotek.com/contribute
 
-// Uses information from
-// https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_7.htm
-
 namespace Cyotek.Data
 {
-  public sealed class Wad3DirectoryReader : WadDirectoryReader
+  public sealed class Wad3DirectoryWriter : WadDirectoryWriter
   {
     #region Public Fields
 
-    public static readonly Wad3DirectoryReader Default = new Wad3DirectoryReader();
+    public static readonly Wad3DirectoryWriter Default = new Wad3DirectoryWriter();
 
     #endregion Public Fields
+
+    #region Public Properties
+
+    public override WadType Type => WadType.Wad3;
+
+    #endregion Public Properties
 
     #region Protected Properties
 
@@ -52,11 +55,5 @@ namespace Cyotek.Data
     protected override byte[] SignatureBytes => WadConstants.Wad3SignatureBytes;
 
     #endregion Protected Properties
-
-    #region Protected Methods
-
-    protected override WadType GetType(byte[] buffer) => WadType.Wad3;
-
-    #endregion Protected Methods
   }
 }

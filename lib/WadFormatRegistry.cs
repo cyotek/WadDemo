@@ -35,13 +35,15 @@ namespace Cyotek.Data
       _readers = new ConcurrentDictionary<WadType, IDirectoryReader>();
       WadFormatRegistry.RegisterReader(WadType.Internal, Wad1InternalDirectoryReader.Default);
       WadFormatRegistry.RegisterReader(WadType.Patch, Wad1PatchDirectoryReader.Default);
-      WadFormatRegistry.RegisterReader(WadType.Pack, PackDirectoryReader.Default);
       WadFormatRegistry.RegisterReader(WadType.Wad2, Wad2DirectoryReader.Default);
       WadFormatRegistry.RegisterReader(WadType.Wad3, Wad3DirectoryReader.Default);
+      WadFormatRegistry.RegisterReader(WadType.Pack, PackDirectoryReader.Default);
 
       _writers = new ConcurrentDictionary<WadType, IDirectoryWriter>();
       WadFormatRegistry.RegisterWriter(WadType.Internal, Wad1InternalDirectoryWriter.Default);
       WadFormatRegistry.RegisterWriter(WadType.Patch, Wad1PatchDirectoryWriter.Default);
+      WadFormatRegistry.RegisterWriter(WadType.Wad2, Wad2DirectoryWriter.Default);
+      WadFormatRegistry.RegisterWriter(WadType.Wad3, Wad3DirectoryWriter.Default);
     }
 
     #endregion Public Constructors

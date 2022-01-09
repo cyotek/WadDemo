@@ -129,7 +129,7 @@ namespace Cyotek.Data.Tests
 
       fileName = this.GetDataFileName("nfo.wad");
 
-      expected = this.CreateSampleWad();
+      expected = this.CreateSampleWad(WadType.Patch);
 
       // act
       actual = WadFile.LoadFrom(fileName);
@@ -139,10 +139,10 @@ namespace Cyotek.Data.Tests
     }
 
     [Test]
-    public void OptimiseTest()
+    public void OptimizeTest()
     {
       // arrange
-      using (Stream stream = this.CreateUnoptomizedSampleWad())
+      using (Stream stream = this.CreateUnoptimizedSampleWad())
       {
         WadFile target;
         byte[] expected;
@@ -165,7 +165,7 @@ namespace Cyotek.Data.Tests
     public void ReplaceTest()
     {
       // arrange
-      using (Stream stream = this.CreateSampleWad())
+      using (Stream stream = this.CreateSampleWad(WadType.Patch))
       {
         WadFile target;
         byte[] expected;
