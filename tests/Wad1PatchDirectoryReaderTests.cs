@@ -47,6 +47,54 @@ namespace Cyotek.Data.Tests
     #region Public Methods
 
     [Test]
+    public void ReadEntryTest()
+    {
+      // arrange
+      IDirectoryReader target;
+      byte[] buffer;
+      MemoryStream stream;
+      WadLump expected;
+      WadLump actual;
+
+      target = new Wad1PatchDirectoryReader();
+
+      buffer = new byte[]
+      {
+        188,
+        3,
+        0,
+        0,
+        54,
+        131,
+        137,
+        0,
+        97,
+        108,
+        112,
+        104,
+        97,
+        0,
+        0,
+        0
+      };
+      stream = new MemoryStream(buffer, true);
+
+      expected = new WadLump
+      {
+        Name = "alpha",
+        Size = 09012022,
+        Offset = 0956,
+        UncompressedSize = 09012022
+      };
+
+      // act
+      actual = target.ReadEntry(stream);
+
+      // assert
+      WadAssert.AreEqual(expected, actual);
+    }
+
+    [Test]
     [TestCaseSource(nameof(ReadEntryTestCaseSource))]
     public void ReadEntryTestCases(string fileName, int iterations, WadLump expected)
     {
@@ -69,6 +117,44 @@ namespace Cyotek.Data.Tests
       {
         actual = target.ReadEntry(stream);
       }
+
+      // assert
+      WadAssert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public void ReadHeaderTest()
+    {
+      // arrange
+      IDirectoryReader target;
+      byte[] buffer;
+      MemoryStream stream;
+      DirectoryHeader expected;
+      DirectoryHeader actual;
+
+      target = new Wad1PatchDirectoryReader();
+
+      buffer = new byte[]
+      {
+        80,
+        87,
+        65,
+        68,
+        54,
+        131,
+        137,
+        0,
+        178,
+        3,
+        0,
+        0
+      };
+      stream = new MemoryStream(buffer, false);
+
+      expected = new DirectoryHeader(WadType.Patch, 0946, 09012022);
+
+      // act
+      actual = target.ReadHeader(stream);
 
       // assert
       WadAssert.AreEqual(expected, actual);
