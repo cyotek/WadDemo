@@ -105,7 +105,8 @@ namespace Cyotek.Data
     }
 
     public void PutNextLump(WadLump lump)
-    {      //Guard.ThrowIfOutOfBounds(name.Length, 1, WadConstants.LumpNameLength, "Name must be between 1 and 8 characters in length.", nameof(name));
+    {
+      //Guard.ThrowIfOutOfBounds(name.Length, 1, WadConstants.LumpNameLength, "Name must be between 1 and 8 characters in length.", nameof(name));
 
       if (_writtenDirectory)
       {
@@ -114,9 +115,15 @@ namespace Cyotek.Data
 
       this.FinalizeLump();
 
-      lump.Offset = (int)_output.Position;
-
-      _lumps.Add(lump);
+      _lumps.Add(new WadLump
+      {
+        Name = lump.Name,
+        Offset = (int)_output.Position,
+        Size = lump.Size,
+        UncompressedSize = lump.UncompressedSize,
+        CompressionMode = lump.CompressionMode,
+        Type = lump.Type
+      });
     }
 
     public override int Read(byte[] buffer, int offset, int count)
