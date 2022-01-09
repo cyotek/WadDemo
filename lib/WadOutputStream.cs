@@ -28,6 +28,8 @@ namespace Cyotek.Data
 
     private readonly long _start;
 
+    private readonly IDirectoryWriter _writer;
+
     private bool _writtenDirectory;
 
     #endregion Private Fields
@@ -40,17 +42,23 @@ namespace Cyotek.Data
     }
 
     public WadOutputStream(Stream output, WadType type)
+      : this(output, WadFormatRegistry.GetWriter(type))
+    {
+    }
+
+    public WadOutputStream(Stream output, IDirectoryWriter writer)
     {
       Guard.ThrowIfNull(output, nameof(output));
       Guard.ThrowIfUnwriteableStream(output, nameof(output));
       Guard.ThrowIfUnseekableStream(output, nameof(output));
-      Guard.ThrowIfOutOfBounds(type, WadType.Internal, WadType.Patch, "Invalid WAD type.", nameof(type));
+      Guard.ThrowIfNull(writer, nameof(writer));
 
       _output = output;
+      _writer = writer;
       _start = output.Position;
       _lumps = new List<WadLump>();
 
-      this.WriteWadHeader(type);
+      writer.WriteHeader(output, new DirectoryHeader(writer.Type, 0, 0));
     }
 
     #endregion Public Constructors
@@ -157,61 +165,22 @@ namespace Cyotek.Data
 
     private void WriteDirectory()
     {
-      byte[] buffer;
       long position;
 
-      buffer = new byte[WadConstants.WadDirectoryEntrySize];
       position = _output.Position;
 
       // first update the header
-      WordHelpers.PutInt32Le(_lumps.Count, buffer, 0);
-      WordHelpers.PutInt32Le((int)position, buffer, 4);
-
-      _output.Position = _start + 4;
-      _output.Write(buffer, 0, 8);
-
+      _output.Position = _start;
+      _writer.WriteHeader(_output, new DirectoryHeader(_writer.Type, (int)position, _lumps.Count));
       _output.Position = position;
 
       // now the directory entries
       for (int i = 0; i < _lumps.Count; i++)
       {
-        WadLump lump;
-
-        lump = _lumps[i];
-
-        for (int j = 0; j < lump.Name.Length; j++)
-        {
-          buffer[WadConstants.LumpNameOffset + j] = (byte)lump.Name[j];
-        }
-
-        for (int j = lump.Name.Length; j < WadConstants.LumpNameLength; j++)
-        {
-          buffer[WadConstants.LumpNameOffset + j] = 0;
-        }
-
-        WordHelpers.PutInt32Le(lump.Offset, buffer, WadConstants.LumpStartOffset);
-        WordHelpers.PutInt32Le(lump.Size, buffer, WadConstants.LumpSizeOffset);
-
-        _output.Write(buffer, 0, buffer.Length);
+        _writer.WriteEntry(_output, _lumps[i]);
       }
 
       _writtenDirectory = true;
-    }
-
-    private void WriteWadHeader(WadType type)
-    {
-      byte[] buffer;
-
-      buffer = new byte[WadConstants.WadHeaderLength];
-
-      buffer[0] = type == WadType.Internal 
-        ? (byte)'I' 
-        : (byte)'P';
-      buffer[1] = (byte)'W';
-      buffer[2] = (byte)'A';
-      buffer[3] = (byte)'D';
-
-      _output.Write(buffer, 0, WadConstants.WadHeaderLength);
     }
 
     #endregion Private Methods

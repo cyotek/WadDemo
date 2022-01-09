@@ -15,10 +15,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace Cyotek.Data
 {
+  [ExcludeFromCodeCoverage]
   internal static class Guard
   {
     #region Public Methods
@@ -66,6 +68,15 @@ namespace Cyotek.Data
       if (Comparer<T>.Default.Compare(value, min) < 0 || Comparer<T>.Default.Compare(value, max) > 0)
       {
         throw new ArgumentOutOfRangeException(name, value, message);
+      }
+    }
+
+    [DebuggerHidden]
+    public static void ThrowIfUnexpectedType(WadType expected, WadType actual)
+    {
+      if (expected != actual)
+      {
+        throw new InvalidDataException("Incorrect WAD type supplied.");
       }
     }
 

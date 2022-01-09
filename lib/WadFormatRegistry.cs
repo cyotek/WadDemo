@@ -24,6 +24,8 @@ namespace Cyotek.Data
 
     private static readonly ConcurrentDictionary<WadType, IDirectoryReader> _readers;
 
+    private static readonly ConcurrentDictionary<WadType, IDirectoryWriter> _writers;
+
     #endregion Private Fields
 
     #region Public Constructors
@@ -36,6 +38,10 @@ namespace Cyotek.Data
       WadFormatRegistry.RegisterReader(WadType.Pack, PackDirectoryReader.Default);
       WadFormatRegistry.RegisterReader(WadType.Wad2, Wad2DirectoryReader.Default);
       WadFormatRegistry.RegisterReader(WadType.Wad3, Wad3DirectoryReader.Default);
+
+      _writers = new ConcurrentDictionary<WadType, IDirectoryWriter>();
+      WadFormatRegistry.RegisterWriter(WadType.Internal, Wad1InternalDirectoryWriter.Default);
+      WadFormatRegistry.RegisterWriter(WadType.Patch, Wad1PatchDirectoryWriter.Default);
     }
 
     #endregion Public Constructors
@@ -73,14 +79,38 @@ namespace Cyotek.Data
       return header.Type;
     }
 
+    public static IDirectoryReader GetReader(WadType type)
+    {
+      _readers.TryGetValue(type, out IDirectoryReader result);
+
+      return result;
+    }
+
+    public static IDirectoryWriter GetWriter(WadType type)
+    {
+      _writers.TryGetValue(type, out IDirectoryWriter result);
+
+      return result;
+    }
+
     public static void RegisterReader(WadType type, IDirectoryReader reader)
     {
       _readers[type] = reader;
     }
 
+    public static void RegisterWriter(WadType type, IDirectoryWriter writer)
+    {
+      _writers[type] = writer;
+    }
+
     public static void UnregisterReader(WadType type)
     {
       _readers.TryRemove(type, out IDirectoryReader _);
+    }
+
+    public static void UnregisterWriter(WadType type)
+    {
+      _writers.TryRemove(type, out IDirectoryWriter _);
     }
 
     #endregion Public Methods

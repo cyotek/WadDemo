@@ -45,6 +45,25 @@ namespace Cyotek.Data
         : null;
     }
 
+    public static void WriteName(string value, byte[] buffer, byte start, byte maximumLength)
+    {
+      int valueLength;
+
+      valueLength = string.IsNullOrEmpty(value)
+        ? 0
+        : value.Length;
+
+      for (int i = 0; i < valueLength; i++)
+      {
+        buffer[start + i] = (byte)value[i];
+      }
+
+      for (int i = valueLength; i < maximumLength; i++)
+      {
+        buffer[start + i] = 0; // shared buffers, so explicitly clear
+      }
+    }
+
     #endregion Public Methods
   }
 }
