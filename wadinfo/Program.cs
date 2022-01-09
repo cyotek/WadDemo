@@ -28,6 +28,8 @@ namespace Cyotek.Tools.WadInfo
       types = new[]
       {
         typeof(InfoVerbOptions),
+        typeof(CreateVerbOptions),
+        typeof(CompareVerbOptions),
         typeof(ListGapsVerbOptions)
       };
 
@@ -45,6 +47,14 @@ namespace Cyotek.Tools.WadInfo
       {
         case InfoVerbOptions info:
           new InfoCommand().Run(info);
+          break;
+
+        case CreateVerbOptions create:
+          new CreateCommand().Run(create);
+          break;
+
+        case CompareVerbOptions compare:
+          new CompareCommand().Run(compare);
           break;
 
         case ListGapsVerbOptions listGaps:

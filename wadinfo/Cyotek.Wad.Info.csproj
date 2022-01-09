@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
+    <PackageReference Include="Jint" Version="3.0.0-beta-2037" />
   </ItemGroup>
 
   <ItemGroup>
