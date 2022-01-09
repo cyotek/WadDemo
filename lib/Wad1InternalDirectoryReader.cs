@@ -16,17 +16,21 @@ using System;
 
 namespace Cyotek.Data
 {
-  public sealed class Wad1DirectoryReader : WadDirectoryReader
+  public sealed class Wad1InternalDirectoryReader : WadDirectoryReader
   {
     #region Public Fields
 
-    public static readonly Wad1DirectoryReader Default = new Wad1DirectoryReader();
+    public static readonly Wad1InternalDirectoryReader Default = new Wad1InternalDirectoryReader();
 
     #endregion Public Fields
 
     #region Protected Properties
 
+    protected override byte DirectoryEntryCompressionModeOffset => throw new NotSupportedException();
+
     protected override byte DirectoryEntryDataOffset => WadConstants.LumpStartOffset;
+
+    protected override byte DirectoryEntryFileTypeOffset => throw new NotSupportedException();
 
     protected override byte DirectoryEntryLength => WadConstants.WadDirectoryEntrySize;
 
@@ -44,28 +48,19 @@ namespace Cyotek.Data
 
     protected override byte HeaderLength => WadConstants.WadHeaderLength;
 
-    protected override byte[] SignatureBytes => throw new NotSupportedException();
+    protected override byte[] SignatureBytes => WadConstants.Wad1InternalSignatureBytes;
 
     #endregion Protected Properties
 
     #region Protected Methods
 
+    protected override byte GetCompressionMode(byte[] buffer) => 0;
+
     protected override int GetDirectoryEntryUncompressedSize(byte[] buffer) => this.GetDirectoryEntrySize(buffer);
 
-    protected override WadType GetType(byte[] buffer)
-    {
-      return buffer[0] == 'I'
-          ? WadType.Internal
-          : WadType.Patch;
-    }
+    protected override byte GetFileType(byte[] buffer) => 0;
 
-    protected override bool IsValidSignature(byte[] buffer)
-    {
-      return (buffer[0] == 'I' || buffer[0] == 'P')
-                   && buffer[1] == 'W'
-                   && buffer[2] == 'A'
-                   && buffer[3] == 'D';
-    }
+    protected override WadType GetType(byte[] buffer) => WadType.Internal;
 
     #endregion Protected Methods
   }

@@ -20,7 +20,11 @@ namespace Cyotek.Data
   {
     #region Protected Properties
 
+    protected abstract byte DirectoryEntryCompressionModeOffset { get; }
+
     protected abstract byte DirectoryEntryDataOffset { get; }
+
+    protected abstract byte DirectoryEntryFileTypeOffset { get; }
 
     protected abstract byte DirectoryEntryLength { get; }
 
@@ -64,9 +68,7 @@ namespace Cyotek.Data
         CompressionMode = this.GetCompressionMode(buffer),
       };
 
-#if NETCOREAPP2_1_OR_GREATER
-      System.Buffers.ArrayPool<byte>.Shared.Return(buffer);
-#endif
+      BufferHelpers.Release(buffer);
 
       return result;
     }
@@ -98,9 +100,7 @@ namespace Cyotek.Data
         result = DirectoryHeader.Empty;
       }
 
-#if NETCOREAPP2_1_OR_GREATER
-      System.Buffers.ArrayPool<byte>.Shared.Return(buffer);
-#endif
+      BufferHelpers.Release(buffer);
 
       return result;
     }
@@ -109,7 +109,7 @@ namespace Cyotek.Data
 
     #region Protected Methods
 
-    protected virtual byte GetCompressionMode(byte[] buffer) => 0;
+    protected virtual byte GetCompressionMode(byte[] buffer) => buffer[this.DirectoryEntryCompressionModeOffset];
 
     protected virtual int GetDirectoryEntryCount(byte[] buffer) => WordHelpers.GetInt32Le(buffer, this.HeaderCountOffset);
 
@@ -123,7 +123,7 @@ namespace Cyotek.Data
 
     protected virtual int GetDirectoryStart(byte[] buffer) => WordHelpers.GetInt32Le(buffer, this.HeaderDirectoryOffset);
 
-    protected virtual byte GetFileType(byte[] buffer) => 0;
+    protected virtual byte GetFileType(byte[] buffer) => buffer[this.DirectoryEntryFileTypeOffset];
 
     protected abstract WadType GetType(byte[] buffer);
 
@@ -155,11 +155,7 @@ namespace Cyotek.Data
     {
       byte[] buffer;
 
-#if NETCOREAPP2_1_OR_GREATER
-      buffer = System.Buffers.ArrayPool<byte>.Shared.Rent(length);
-#else
-      buffer = new byte[length];
-#endif
+      buffer = BufferHelpers.GetBuffer(length);
 
       if (stream.Read(buffer, 0, length) != length)
       {

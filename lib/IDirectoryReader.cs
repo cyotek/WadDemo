@@ -20,9 +20,9 @@ namespace Cyotek.Data
   {
     #region Public Methods
 
-    DirectoryHeader ReadHeader(Stream stream);
-
     WadLump ReadEntry(Stream stream);
+
+    DirectoryHeader ReadHeader(Stream stream);
 
     #endregion Public Methods
   }

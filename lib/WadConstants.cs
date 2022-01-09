@@ -82,6 +82,16 @@ namespace Cyotek.Data
 
     public const byte WadHeaderLength = 12;
 
+    public static readonly byte[] PackSignatureBytes = { (byte)'P', (byte)'A', (byte)'C', (byte)'K' };
+
+    public static readonly byte[] Wad1InternalSignatureBytes = { (byte)'I', (byte)'W', (byte)'A', (byte)'D' };
+
+    public static readonly byte[] Wad1PatchSignatureBytes = { (byte)'P', (byte)'W', (byte)'A', (byte)'D' };
+
+    public static readonly byte[] Wad2SignatureBytes = { (byte)'W', (byte)'A', (byte)'D', (byte)'2' };
+
+    public static readonly byte[] Wad3SignatureBytes = { (byte)'W', (byte)'A', (byte)'D', (byte)'3' };
+
     #endregion Public Fields
   }
 }

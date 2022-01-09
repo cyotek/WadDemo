@@ -31,8 +31,8 @@ namespace Cyotek.Data
     static WadFormatRegistry()
     {
       _readers = new ConcurrentDictionary<WadType, IDirectoryReader>();
-      WadFormatRegistry.RegisterReader(WadType.Internal, Wad1DirectoryReader.Default);
-      WadFormatRegistry.RegisterReader(WadType.Patch, Wad1DirectoryReader.Default);
+      WadFormatRegistry.RegisterReader(WadType.Internal, Wad1InternalDirectoryReader.Default);
+      WadFormatRegistry.RegisterReader(WadType.Patch, Wad1PatchDirectoryReader.Default);
       WadFormatRegistry.RegisterReader(WadType.Pack, PackDirectoryReader.Default);
       WadFormatRegistry.RegisterReader(WadType.Wad2, Wad2DirectoryReader.Default);
       WadFormatRegistry.RegisterReader(WadType.Wad3, Wad3DirectoryReader.Default);

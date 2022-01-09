@@ -55,8 +55,12 @@ namespace Cyotek.Data
       switch (WadFormatRegistry.GetFormat(stream, out DirectoryHeader header))
       {
         case WadType.Internal:
+          _reader = Wad1InternalDirectoryReader.Default;
+          _entrySize = WadConstants.WadDirectoryEntrySize;
+          break;
+
         case WadType.Patch:
-          _reader = Wad1DirectoryReader.Default;
+          _reader = Wad1PatchDirectoryReader.Default;
           _entrySize = WadConstants.WadDirectoryEntrySize;
           break;
 

@@ -19,7 +19,7 @@ using System.IO;
 namespace Cyotek.Data.Tests
 {
   [TestFixture]
-  public class Wad1DirectoryReaderTests : TestBase
+  public class Wad1InternalDirectoryReaderTests : TestBase
   {
     #region Public Properties
 
@@ -27,8 +27,8 @@ namespace Cyotek.Data.Tests
     {
       get
       {
-        yield return new TestCaseData("nfo.wad", 1, new WadLump { Name = "PHOTO1", Size = 122, UncompressedSize = 122 }).SetName("{m}First");
-        yield return new TestCaseData("nfo.wad", 2, new WadLump { Name = "PHOTO2", Size = 122, UncompressedSize = 122 }).SetName("{m}Second");
+        yield return new TestCaseData("photos.wad", 1, new WadLump { Name = "P_START", Size = 0, UncompressedSize = 0 }).SetName("{m}First");
+        yield return new TestCaseData("photos.wad", 2, new WadLump { Name = "P1_START", Size = 0, UncompressedSize = 0 }).SetName("{m}Second");
       }
     }
 
@@ -37,7 +37,7 @@ namespace Cyotek.Data.Tests
       get
       {
         yield return new TestCaseData("photo1.jpg", DirectoryHeader.Empty).SetName("{m}Invalid");
-        yield return new TestCaseData("nfo.wad", new DirectoryHeader(WadType.Patch, 391, 3)).SetName("{m}Patch");
+        yield return new TestCaseData("nfo.wad", DirectoryHeader.Empty).SetName("{m}Patch");
         yield return new TestCaseData("photos.wad", new DirectoryHeader(WadType.Internal, 28156, 14)).SetName("{m}Internal");
       }
     }
@@ -56,7 +56,7 @@ namespace Cyotek.Data.Tests
       DirectoryHeader header;
       Stream stream;
 
-      target = new Wad1DirectoryReader();
+      target = new Wad1InternalDirectoryReader();
       stream = File.OpenRead(this.GetDataFileName(fileName));
 
       header = target.ReadHeader(stream);
@@ -83,7 +83,7 @@ namespace Cyotek.Data.Tests
       DirectoryHeader actual;
       Stream stream;
 
-      target = new Wad1DirectoryReader();
+      target = new Wad1InternalDirectoryReader();
       stream = File.OpenRead(this.GetDataFileName(fileName));
 
       // act
