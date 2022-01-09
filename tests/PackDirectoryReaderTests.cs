@@ -23,18 +23,189 @@ namespace Cyotek.Data.Tests
   {
     #region Public Properties
 
+    public static IEnumerable<TestCaseData> ReadEntryTestCaseSource
+    {
+      get
+      {
+        yield return new TestCaseData("nfo.pak", 1, new WadLump { Name = "PHOTO1", Size = 122, UncompressedSize = 122 }).SetName("{m}First");
+        yield return new TestCaseData("nfo.pak", 3, new WadLump { Name = "PHOTO5", Size = 135, UncompressedSize = 135 }).SetName("{m}Second");
+      }
+    }
+
     public static IEnumerable<TestCaseData> ReadHeaderTestCaseSource
     {
       get
       {
-        yield return new TestCaseData("nfo.wad", DirectoryHeader.Empty).SetName("{m}Invalid");
-        yield return new TestCaseData(@"E:\Games\Quake\id1\PAK0.PAK", new DirectoryHeader(WadType.Pack, 0, 0)).SetName("{m}");
+        yield return new TestCaseData("nfo.pak", new DirectoryHeader(WadType.Pack, 391, 3)).SetName("{m}");
+        yield return new TestCaseData("photo1.jpg", DirectoryHeader.Empty).SetName("{m}Invalid");
       }
     }
 
     #endregion Public Properties
 
     #region Public Methods
+
+    [Test]
+    public void ReadEntryTest()
+    {
+      // arrange
+      IDirectoryReader target;
+      byte[] buffer;
+      MemoryStream stream;
+      WadLump expected;
+      WadLump actual;
+
+      target = new PackDirectoryReader();
+
+      buffer = new byte[]
+      {
+        98,
+        101,
+        116,
+        97,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        224,
+        7,
+        0,
+        0,
+        54,
+        131,
+        137,
+        0
+      };
+      stream = new MemoryStream(buffer, true);
+
+      expected = new WadLump
+      {
+        Name = "beta",
+        Size = 09012022,
+        UncompressedSize = 09012022,
+        Offset = 2016
+      };
+
+      // act
+      actual = target.ReadEntry(stream);
+
+      // assert
+      WadAssert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    [TestCaseSource(nameof(ReadEntryTestCaseSource))]
+    public void ReadEntryTestCases(string fileName, int iterations, WadLump expected)
+    {
+      // arrange
+      IDirectoryReader target;
+      WadLump actual;
+      DirectoryHeader header;
+      Stream stream;
+
+      target = new PackDirectoryReader();
+      stream = File.OpenRead(this.GetDataFileName(fileName));
+
+      header = target.ReadHeader(stream);
+      stream.Position = header.DirectoryOffset;
+
+      actual = null;
+
+      // act
+      for (int i = 0; i < iterations; i++)
+      {
+        actual = target.ReadEntry(stream);
+      }
+
+      // assert
+      WadAssert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public void ReadHeaderTest()
+    {
+      // arrange
+      IDirectoryReader target;
+      byte[] buffer;
+      MemoryStream stream;
+      DirectoryHeader expected;
+      DirectoryHeader actual;
+
+      target = new PackDirectoryReader();
+
+      buffer = new byte[]
+      {
+        80,
+        65,
+        67,
+        75,
+        218,
+        7,
+        0,
+        0,
+        128,
+        205,
+        96,
+        34
+      };
+      stream = new MemoryStream(buffer, false);
+
+      expected = new DirectoryHeader(WadType.Pack, 2010, 09012022);
+
+      // act
+      actual = target.ReadHeader(stream);
+
+      // assert
+      WadAssert.AreEqual(expected, actual);
+    }
 
     [Test]
     [TestCaseSource(nameof(ReadHeaderTestCaseSource))]
@@ -54,29 +225,6 @@ namespace Cyotek.Data.Tests
       // assert
       WadAssert.AreEqual(expected, actual);
     }
-
-    [Test]
-    public void TestNameTest()
-    {
-      // arrange
-      IDirectoryReader target;
-      DirectoryHeader actual;
-      Stream stream;
-
-      target = new PackDirectoryReader();
-      stream = File.OpenRead(this.GetDataFileName(@"E:\Games\Quake\id1\PAK0.PAK"));
-
-actual      =target.ReadHeader(stream);
-stream.Position = actual.DirectoryOffset;
-      
-      // act
-var x=      target.ReadEntry(stream);
-
-      // assert
-      Assert.Fail();
-    }
-
-
 
     #endregion Public Methods
   }

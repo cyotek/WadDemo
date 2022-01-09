@@ -44,6 +44,7 @@ namespace Cyotek.Data
       WadFormatRegistry.RegisterWriter(WadType.Patch, Wad1PatchDirectoryWriter.Default);
       WadFormatRegistry.RegisterWriter(WadType.Wad2, Wad2DirectoryWriter.Default);
       WadFormatRegistry.RegisterWriter(WadType.Wad3, Wad3DirectoryWriter.Default);
+      WadFormatRegistry.RegisterWriter(WadType.Pack, PackDirectoryWriter.Default);
     }
 
     #endregion Public Constructors

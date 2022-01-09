@@ -14,18 +14,21 @@
 
 using System;
 
-// Uses information from
-// https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_3.htm#CPAKF
-
 namespace Cyotek.Data
 {
-  public sealed class PackDirectoryReader : WadDirectoryReader
+  public sealed class PackDirectoryWriter : WadDirectoryWriter
   {
     #region Public Fields
 
-    public static readonly PackDirectoryReader Default = new PackDirectoryReader();
+    public static readonly PackDirectoryWriter Default = new PackDirectoryWriter();
 
     #endregion Public Fields
+
+    #region Public Properties
+
+    public override WadType Type => WadType.Pack;
+
+    #endregion Public Properties
 
     #region Protected Properties
 
@@ -57,18 +60,25 @@ namespace Cyotek.Data
 
     #region Protected Methods
 
-    protected override byte GetCompressionMode(byte[] buffer) => 0;
-
-    protected override int GetDirectoryEntryCount(byte[] buffer)
+    protected override void SetDirectoryEntryCompressionMode(byte[] buffer, WadLump directoryEntry)
     {
-      return WordHelpers.GetInt32Le(buffer, this.HeaderCountOffset) / this.DirectoryEntryLength;
+      // not supported
     }
 
-    protected override int GetDirectoryEntryUncompressedSize(byte[] buffer) => this.GetDirectoryEntrySize(buffer);
+    protected override void SetDirectoryEntryFileType(byte[] buffer, WadLump directoryEntry)
+    {
+      // not supported
+    }
 
-    protected override byte GetFileType(byte[] buffer) => 0;
+    protected override void SetDirectoryEntryUncompressedSize(byte[] buffer, WadLump directoryEntry)
+    {
+      // not supported
+    }
 
-    protected override WadType GetType(byte[] buffer) => WadType.Pack;
+    protected override void SetHeaderCount(byte[] buffer, DirectoryHeader directoryHeader)
+    {
+      WordHelpers.PutInt32Le(directoryHeader.EntryCount * WadConstants.PackDirectoryEntrySize, buffer, this.HeaderCountOffset);
+    }
 
     #endregion Protected Methods
   }

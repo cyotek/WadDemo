@@ -76,7 +76,6 @@ namespace Cyotek.Data
     public virtual void WriteHeader(Stream stream, DirectoryHeader directoryHeader)
     {
       byte[] buffer;
-      byte[] signature;
 
       Guard.ThrowIfNull(stream, nameof(stream));
       Guard.ThrowIfUnwriteableStream(stream, nameof(stream));
@@ -84,14 +83,9 @@ namespace Cyotek.Data
 
       buffer = BufferHelpers.GetBuffer(this.HeaderLength);
 
-      signature = this.SignatureBytes;
-      for (int i = 0; i < signature.Length; i++)
-      {
-        buffer[i] = signature[i];
-      }
-
-      WordHelpers.PutInt32Le(directoryHeader.DirectoryOffset, buffer, this.HeaderDirectoryOffset);
-      WordHelpers.PutInt32Le(directoryHeader.EntryCount, buffer, this.HeaderCountOffset);
+      this.SetSignature(buffer);
+      this.SetHeaderDirectoryOffset(buffer, directoryHeader);
+      this.SetHeaderCount(buffer, directoryHeader);
 
       stream.Write(buffer, 0, this.HeaderLength);
     }
@@ -128,6 +122,28 @@ namespace Cyotek.Data
     protected virtual void SetDirectoryEntryUncompressedSize(byte[] buffer, WadLump directoryEntry)
     {
       WordHelpers.PutInt32Le(directoryEntry.UncompressedSize, buffer, this.DirectoryEntryUncompressedSizeOffset);
+    }
+
+    protected virtual void SetHeaderCount(byte[] buffer, DirectoryHeader directoryHeader)
+    {
+      WordHelpers.PutInt32Le(directoryHeader.EntryCount, buffer, this.HeaderCountOffset);
+    }
+
+    protected virtual void SetHeaderDirectoryOffset(byte[] buffer, DirectoryHeader directoryHeader)
+    {
+      WordHelpers.PutInt32Le(directoryHeader.DirectoryOffset, buffer, this.HeaderDirectoryOffset);
+    }
+
+    protected virtual void SetSignature(byte[] buffer)
+    {
+      byte[] signature;
+
+      signature = this.SignatureBytes;
+
+      for (int i = 0; i < signature.Length; i++)
+      {
+        buffer[i] = signature[i];
+      }
     }
 
     #endregion Protected Methods
