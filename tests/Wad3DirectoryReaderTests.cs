@@ -55,7 +55,7 @@ namespace Cyotek.Data.Tests
       WadLump expected;
       WadLump actual;
 
-      target = new Wad3DirectoryReader();
+      target = new WadDirectoryReader(WadType.Wad3);
 
       buffer = new byte[]
       {
@@ -107,6 +107,7 @@ namespace Cyotek.Data.Tests
       actual = target.ReadEntry(stream);
 
       // assert
+      stream.Dispose();
       WadAssert.AreEqual(expected, actual);
     }
 
@@ -120,7 +121,7 @@ namespace Cyotek.Data.Tests
       DirectoryHeader header;
       Stream stream;
 
-      target = new Wad3DirectoryReader();
+      target = new WadDirectoryReader(WadType.Wad3);
       stream = File.OpenRead(this.GetDataFileName(fileName));
 
       header = target.ReadHeader(stream);
@@ -135,6 +136,7 @@ namespace Cyotek.Data.Tests
       }
 
       // assert
+      stream.Dispose();
       WadAssert.AreEqual(expected, actual);
     }
 
@@ -148,7 +150,7 @@ namespace Cyotek.Data.Tests
       DirectoryHeader expected;
       DirectoryHeader actual;
 
-      target = new Wad3DirectoryReader();
+      target = new WadDirectoryReader(WadType.Wad3);
 
       buffer = new byte[]
       {
@@ -173,6 +175,7 @@ namespace Cyotek.Data.Tests
       actual = target.ReadHeader(stream);
 
       // assert
+      stream.Dispose();
       WadAssert.AreEqual(expected, actual);
     }
 
@@ -185,13 +188,14 @@ namespace Cyotek.Data.Tests
       DirectoryHeader actual;
       Stream stream;
 
-      target = new Wad3DirectoryReader();
+      target = new WadDirectoryReader(WadType.Wad3);
       stream = File.OpenRead(this.GetDataFileName(fileName));
 
       // act
       actual = target.ReadHeader(stream);
 
       // assert
+      stream.Dispose();
       WadAssert.AreEqual(expected, actual);
     }
 

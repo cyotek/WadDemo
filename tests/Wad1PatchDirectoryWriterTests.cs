@@ -32,7 +32,7 @@ namespace Cyotek.Data.Tests
       byte[] expected;
       byte[] actual;
 
-      target = new Wad1PatchDirectoryWriter();
+      target = new WadDirectoryWriter(WadType.Patch);
 
       actual = new byte[24];
       stream = new MemoryStream(actual, true);
@@ -76,6 +76,7 @@ namespace Cyotek.Data.Tests
       target.WriteEntry(stream, value);
 
       // assert
+      stream.Dispose();
       CollectionAssert.AreEqual(expected, actual);
     }
 
@@ -89,7 +90,7 @@ namespace Cyotek.Data.Tests
       byte[] expected;
       byte[] actual;
 
-      target = new Wad1PatchDirectoryWriter();
+      target = new WadDirectoryWriter(WadType.Patch);
 
       actual = new byte[16];
       stream = new MemoryStream(actual, true);
@@ -120,6 +121,7 @@ namespace Cyotek.Data.Tests
       target.WriteHeader(stream, value);
 
       // assert
+      stream.Dispose();
       CollectionAssert.AreEqual(expected, actual);
     }
 

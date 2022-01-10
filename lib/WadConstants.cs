@@ -42,6 +42,8 @@ namespace Cyotek.Data
 
     public const byte PackHeaderLength = 12;
 
+    public const byte SignatureLength = 4;
+
     public const byte Wad2EntryCompressionModeOffset = 13;
 
     public const byte Wad2EntryLength = 32;

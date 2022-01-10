@@ -22,10 +22,10 @@ namespace Cyotek.Data
 
     Patch,
 
-    Pack,
-
     Wad2,
 
-    Wad3
+    Wad3,
+
+    Pack
   }
 }

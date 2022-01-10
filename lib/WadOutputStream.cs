@@ -42,7 +42,12 @@ namespace Cyotek.Data
     }
 
     public WadOutputStream(Stream output, WadType type)
-      : this(output, WadFormatRegistry.GetWriter(type))
+      : this(output, new WadDirectoryWriter(type))
+    {
+    }
+
+    public WadOutputStream(Stream output, WadFormat format)
+      : this(output, new WadDirectoryWriter(format))
     {
     }
 
@@ -187,16 +192,15 @@ namespace Cyotek.Data
 
       position = _output.Position;
 
-      // first update the header
-      _output.Position = _start;
-      _writer.WriteHeader(_output, new DirectoryHeader(_writer.Type, (int)position, _lumps.Count));
-      _output.Position = position;
-
-      // now the directory entries
+      // write the directory index
       for (int i = 0; i < _lumps.Count; i++)
       {
         _writer.WriteEntry(_output, _lumps[i]);
       }
+
+      // update the header with the directory index start and count
+      _output.Position = _start;
+      _writer.WriteHeader(_output, new DirectoryHeader(_writer.Type, (int)position, _lumps.Count));
 
       _writtenDirectory = true;
     }

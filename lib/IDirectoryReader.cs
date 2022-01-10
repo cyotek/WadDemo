@@ -18,6 +18,12 @@ namespace Cyotek.Data
 {
   public interface IDirectoryReader
   {
+    #region Public Properties
+
+    int DirectoryEntrySize { get; }
+
+    #endregion Public Properties
+
     #region Public Methods
 
     WadLump ReadEntry(Stream stream);

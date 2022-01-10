@@ -26,7 +26,7 @@ namespace Cyotek.Data
 
     private Stream _inputStream;
 
-    private WadLumpCollection _lumps;
+    private readonly WadLumpCollection _lumps;
 
     private WadType _type;
 
@@ -68,6 +68,69 @@ namespace Cyotek.Data
     #endregion Public Properties
 
     #region Public Methods
+
+    public static WadType GetFormat(string fileName)
+    {
+      Guard.ThrowIfNullOrEmpty(fileName, nameof(fileName));
+
+      using (Stream stream = File.OpenRead(fileName))
+      {
+        return WadFile.GetFormat(stream);
+      }
+    }
+
+    public static WadType GetFormat(Stream stream)
+    {
+      WadType result;
+      byte[] buffer;
+      long position;
+
+      Guard.ThrowIfNull(stream, nameof(stream));
+      Guard.ThrowIfUnreadableStream(stream, nameof(stream));
+      Guard.ThrowIfUnseekableStream(stream, nameof(stream));
+
+      buffer = BufferHelpers.GetBuffer(WadConstants.SignatureLength);
+
+      position = stream.Position;
+
+      if (stream.Read(buffer, 0, WadConstants.SignatureLength) == WadConstants.SignatureLength)
+      {
+        if (WadDirectoryReader.IsValidSignature(buffer, WadConstants.Wad1InternalSignatureBytes))
+        {
+          result = WadType.Internal;
+        }
+        else if (WadDirectoryReader.IsValidSignature(buffer, WadConstants.Wad1PatchSignatureBytes))
+        {
+          result = WadType.Patch;
+        }
+        else if (WadDirectoryReader.IsValidSignature(buffer, WadConstants.Wad2SignatureBytes))
+        {
+          result = WadType.Wad2;
+        }
+        else if (WadDirectoryReader.IsValidSignature(buffer, WadConstants.Wad3SignatureBytes))
+        {
+          result = WadType.Wad3;
+        }
+        else if (WadDirectoryReader.IsValidSignature(buffer, WadConstants.PackSignatureBytes))
+        {
+          result = WadType.Pack;
+        }
+        else
+        {
+          result = WadType.None;
+        }
+      }
+      else
+      {
+        result = WadType.None;
+      }
+
+      stream.Position = position;
+
+      BufferHelpers.Release(buffer);
+
+      return result;
+    }
 
     public static WadFile LoadFrom(string fileName)
     {
@@ -231,7 +294,9 @@ namespace Cyotek.Data
 
     private Stream GetTemporaryStream()
     {
-      return this.ShouldUseFileStream() ? new TemporaryFileStream() : (Stream)new MemoryStream();
+      return this.ShouldUseFileStream() 
+        ? new TemporaryFileStream() 
+        : (Stream)new MemoryStream();
     }
 
     private bool ShouldUseFileStream()
@@ -248,7 +313,7 @@ namespace Cyotek.Data
 
         lump = _lumps[i];
 
-        if (!string.IsNullOrEmpty(lump.PendingFileName) && File.Exists(lump.PendingFileName))
+        if (!string.IsNullOrEmpty(lump.PendingFileName))
         {
           size += new FileInfo(lump.PendingFileName).Length;
         }

@@ -55,7 +55,7 @@ namespace Cyotek.Data.Tests
       WadLump expected;
       WadLump actual;
 
-      target = new Wad2DirectoryReader();
+      target = new WadDirectoryReader(WadType.Wad2);
 
       buffer = new byte[]
       {
@@ -120,7 +120,7 @@ namespace Cyotek.Data.Tests
       DirectoryHeader header;
       Stream stream;
 
-      target = new Wad2DirectoryReader();
+      target = new WadDirectoryReader(WadType.Wad2);
       stream = File.OpenRead(this.GetDataFileName(fileName));
 
       header = target.ReadHeader(stream);
@@ -148,7 +148,7 @@ namespace Cyotek.Data.Tests
       DirectoryHeader expected;
       DirectoryHeader actual;
 
-      target = new Wad2DirectoryReader();
+      target = new WadDirectoryReader(WadType.Wad2);
 
       buffer = new byte[]
       {
@@ -185,7 +185,7 @@ namespace Cyotek.Data.Tests
       DirectoryHeader actual;
       Stream stream;
 
-      target = new Wad2DirectoryReader();
+      target = new WadDirectoryReader(WadType.Wad2);
       stream = File.OpenRead(this.GetDataFileName(fileName));
 
       // act

@@ -23,8 +23,7 @@ namespace Cyotek.Data
 
     private readonly int _directoryStart;
 
-    private readonly int _entrySize;
-
+    
     private readonly bool _keepOpen;
 
     private readonly int _lumpCount;
@@ -39,6 +38,8 @@ namespace Cyotek.Data
 
     private int _lumpIndex;
 
+    private WadFormat _format;
+
     #endregion Private Fields
 
     #region Public Constructors
@@ -50,39 +51,14 @@ namespace Cyotek.Data
 
     public WadReader(Stream stream, bool keepOpen)
     {
-      // TODO: Note much point having a registry with this bunch of hard coded nonsense
-      // 
-      switch (WadFormatRegistry.GetFormat(stream, out DirectoryHeader header))
-      {
-        case WadType.Internal:
-          _reader = Wad1InternalDirectoryReader.Default;
-          _entrySize = WadConstants.WadDirectoryEntrySize;
-          break;
+      WadType type;
+      DirectoryHeader header;
 
-        case WadType.Patch:
-          _reader = Wad1PatchDirectoryReader.Default;
-          _entrySize = WadConstants.WadDirectoryEntrySize;
-          break;
+      type= WadFile.GetFormat(stream);
 
-        case WadType.Pack:
-          _reader = PackDirectoryReader.Default;
-          _entrySize = WadConstants.PackDirectoryEntrySize;
-          break;
-
-        case WadType.Wad2:
-          _reader = Wad2DirectoryReader.Default;
-          _entrySize = WadConstants.Wad2EntryLength;
-          break;
-
-        case WadType.Wad3:
-          _reader = Wad3DirectoryReader.Default;
-          _entrySize = WadConstants.Wad3EntryLength;
-          break;
-
-        default:
-          throw new InvalidDataException("Stream does not appear to be a WAD file.");
-      }
-
+      _reader = new WadDirectoryReader(type);
+      header = _reader.ReadHeader(stream);
+      
       _type = header.Type;
       _lumpCount = header.EntryCount;
       _directoryStart = header.DirectoryOffset;
@@ -120,7 +96,7 @@ namespace Cyotek.Data
       {
         int offset;
 
-        offset = _directoryStart + (_lumpIndex * _entrySize);
+        offset = _directoryStart + (_lumpIndex * _reader.DirectoryEntrySize);
 
         _stream.Position = offset;
 

@@ -16,129 +16,98 @@ using System.IO;
 
 namespace Cyotek.Data
 {
-  public abstract class WadDirectoryWriter : IDirectoryWriter
+  public sealed class WadDirectoryWriter : IDirectoryWriter
   {
+    #region Private Fields
+
+    private readonly WadFormat _format;
+
+    #endregion Private Fields
+
+    #region Public Constructors
+
+    public WadDirectoryWriter(WadFormat format)
+    {
+      Guard.ThrowIfNull(format, nameof(format));
+
+      _format = format;
+    }
+
+    public WadDirectoryWriter(WadType type)
+      : this(WadFormat.GetFormat(type))
+    {
+    }
+
+    #endregion Public Constructors
+
     #region Public Properties
 
-    public abstract WadType Type { get; }
+    public WadType Type => _format.Type;
 
     #endregion Public Properties
 
-    #region Protected Properties
-
-    protected abstract byte DirectoryEntryCompressionModeOffset { get; }
-
-    protected abstract byte DirectoryEntryDataOffset { get; }
-
-    protected abstract byte DirectoryEntryFileTypeOffset { get; }
-
-    protected abstract byte DirectoryEntryLength { get; }
-
-    protected abstract byte DirectoryEntryNameLength { get; }
-
-    protected abstract byte DirectoryEntryNameOffset { get; }
-
-    protected abstract byte DirectoryEntrySizeOffset { get; }
-
-    protected abstract byte DirectoryEntryUncompressedSizeOffset { get; }
-
-    protected abstract byte HeaderCountOffset { get; }
-
-    protected abstract byte HeaderDirectoryOffset { get; }
-
-    protected abstract byte HeaderLength { get; }
-
-    protected abstract byte[] SignatureBytes { get; }
-
-    #endregion Protected Properties
-
     #region Public Methods
 
-    public virtual void WriteEntry(Stream stream, WadLump directoryEntry)
+    public void WriteEntry(Stream stream, WadLump directoryEntry)
     {
       byte[] buffer;
 
       Guard.ThrowIfNull(stream, nameof(stream));
       Guard.ThrowIfUnwriteableStream(stream, nameof(stream));
 
-      buffer = BufferHelpers.GetBuffer(this.DirectoryEntryLength);
+      buffer = BufferHelpers.GetBuffer(_format.DirectoryEntryLength);
 
-      this.SetDirectoryEntryName(buffer, directoryEntry);
-      this.SetDirectoryEntryDataOffset(buffer, directoryEntry);
-      this.SetDirectoryEntrySize(buffer, directoryEntry);
-      this.SetDirectoryEntryUncompressedSize(buffer, directoryEntry);
-      this.SetDirectoryEntryCompressionMode(buffer, directoryEntry);
-      this.SetDirectoryEntryFileType(buffer, directoryEntry);
+      CharHelpers.WriteName(directoryEntry.Name, buffer, _format.DirectoryEntryNameOffset, _format.DirectoryEntryNameLength);
+      WordHelpers.PutInt32Le(directoryEntry.Offset, buffer, _format.DirectoryEntryDataOffset);
+      WordHelpers.PutInt32Le(directoryEntry.Size, buffer, _format.DirectoryEntrySizeOffset);
 
-      stream.Write(buffer, 0, this.DirectoryEntryLength);
+      if ((_format.Flags & WadFormatFlag.CompressionMode) != 0)
+      {
+        buffer[_format.DirectoryEntryCompressionModeOffset] = directoryEntry.CompressionMode;
+        WordHelpers.PutInt32Le(directoryEntry.UncompressedSize, buffer, _format.DirectoryEntryUncompressedSizeOffset);
+      }
+
+      if ((_format.Flags & WadFormatFlag.FileType) != 0)
+      {
+        buffer[_format.DirectoryEntryFileTypeOffset] = directoryEntry.Type;
+      }
+
+      stream.Write(buffer, 0, _format.DirectoryEntryLength);
     }
 
-    public virtual void WriteHeader(Stream stream, DirectoryHeader directoryHeader)
+    public void WriteHeader(Stream stream, DirectoryHeader directoryHeader)
     {
       byte[] buffer;
 
       Guard.ThrowIfNull(stream, nameof(stream));
       Guard.ThrowIfUnwriteableStream(stream, nameof(stream));
-      Guard.ThrowIfUnexpectedType(this.Type, directoryHeader.Type);
+      Guard.ThrowIfUnexpectedType(_format.Type, directoryHeader.Type);
 
-      buffer = BufferHelpers.GetBuffer(this.HeaderLength);
+      buffer = BufferHelpers.GetBuffer(_format.HeaderLength);
 
       this.SetSignature(buffer);
-      this.SetHeaderDirectoryOffset(buffer, directoryHeader);
-      this.SetHeaderCount(buffer, directoryHeader);
+      WordHelpers.PutInt32Le(directoryHeader.DirectoryOffset, buffer, _format.HeaderDirectoryOffset);
+      if ((_format.Flags & WadFormatFlag.DirectorySize) == 0)
+      {
+        WordHelpers.PutInt32Le(directoryHeader.EntryCount, buffer, _format.HeaderCountOffset);
+      }
+      else
+      {
+        WordHelpers.PutInt32Le(directoryHeader.EntryCount * _format.DirectoryEntryLength, buffer, _format.HeaderCountOffset);
+      }
 
-      stream.Write(buffer, 0, this.HeaderLength);
+      stream.Write(buffer, 0, _format.HeaderLength);
     }
 
     #endregion Public Methods
 
-    #region Protected Methods
+    #region Private Methods
 
-    protected virtual void SetDirectoryEntryCompressionMode(byte[] buffer, WadLump directoryEntry)
-    {
-      buffer[this.DirectoryEntryCompressionModeOffset] = directoryEntry.CompressionMode;
-    }
-
-    protected virtual void SetDirectoryEntryDataOffset(byte[] buffer, WadLump directoryEntry)
-    {
-      WordHelpers.PutInt32Le(directoryEntry.Offset, buffer, this.DirectoryEntryDataOffset);
-    }
-
-    protected virtual void SetDirectoryEntryFileType(byte[] buffer, WadLump directoryEntry)
-    {
-      buffer[this.DirectoryEntryFileTypeOffset] = directoryEntry.Type;
-    }
-
-    protected virtual void SetDirectoryEntryName(byte[] buffer, WadLump directoryEntry)
-    {
-      CharHelpers.WriteName(directoryEntry.Name, buffer, this.DirectoryEntryNameOffset, this.DirectoryEntryNameLength);
-    }
-
-    protected virtual void SetDirectoryEntrySize(byte[] buffer, WadLump directoryEntry)
-    {
-      WordHelpers.PutInt32Le(directoryEntry.Size, buffer, this.DirectoryEntrySizeOffset);
-    }
-
-    protected virtual void SetDirectoryEntryUncompressedSize(byte[] buffer, WadLump directoryEntry)
-    {
-      WordHelpers.PutInt32Le(directoryEntry.UncompressedSize, buffer, this.DirectoryEntryUncompressedSizeOffset);
-    }
-
-    protected virtual void SetHeaderCount(byte[] buffer, DirectoryHeader directoryHeader)
-    {
-      WordHelpers.PutInt32Le(directoryHeader.EntryCount, buffer, this.HeaderCountOffset);
-    }
-
-    protected virtual void SetHeaderDirectoryOffset(byte[] buffer, DirectoryHeader directoryHeader)
-    {
-      WordHelpers.PutInt32Le(directoryHeader.DirectoryOffset, buffer, this.HeaderDirectoryOffset);
-    }
-
-    protected virtual void SetSignature(byte[] buffer)
+    private void SetSignature(byte[] buffer)
     {
       byte[] signature;
 
-      signature = this.SignatureBytes;
+      signature = _format.SignatureBytes;
 
       for (int i = 0; i < signature.Length; i++)
       {
@@ -146,6 +115,6 @@ namespace Cyotek.Data
       }
     }
 
-    #endregion Protected Methods
+    #endregion Private Methods
   }
 }

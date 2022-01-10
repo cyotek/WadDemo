@@ -16,35 +16,29 @@ using System.IO;
 
 namespace Cyotek.Data
 {
-  public abstract class WadDirectoryReader : IDirectoryReader
+  public sealed class WadDirectoryReader : IDirectoryReader
   {
-    #region Protected Properties
+    #region Private Fields
 
-    protected abstract byte DirectoryEntryCompressionModeOffset { get; }
+    private readonly WadFormat _format;
 
-    protected abstract byte DirectoryEntryDataOffset { get; }
+    #endregion Private Fields
 
-    protected abstract byte DirectoryEntryFileTypeOffset { get; }
+    #region Public Constructors
 
-    protected abstract byte DirectoryEntryLength { get; }
+    public WadDirectoryReader(WadFormat format)
+    {
+      Guard.ThrowIfNull(format, nameof(format));
 
-    protected abstract byte DirectoryEntryNameLength { get; }
+      _format = format;
+    }
 
-    protected abstract byte DirectoryEntryNameOffset { get; }
+    public WadDirectoryReader(WadType type)
+      : this(WadFormat.GetFormat(type))
+    {
+    }
 
-    protected abstract byte DirectoryEntrySizeOffset { get; }
-
-    protected abstract byte DirectoryEntryUncompressedSizeOffset { get; }
-
-    protected abstract byte HeaderCountOffset { get; }
-
-    protected abstract byte HeaderDirectoryOffset { get; }
-
-    protected abstract byte HeaderLength { get; }
-
-    protected abstract byte[] SignatureBytes { get; }
-
-    #endregion Protected Properties
+    #endregion Public Constructors
 
     #region Public Methods
 
@@ -56,17 +50,29 @@ namespace Cyotek.Data
       Guard.ThrowIfNull(stream, nameof(stream));
       Guard.ThrowIfUnreadableStream(stream, nameof(stream));
 
-      buffer = this.ReadBuffer(stream, this.DirectoryEntryLength);
+      buffer = this.ReadBuffer(stream, _format.DirectoryEntryLength);
 
       result = new WadLump
       {
-        Offset = this.GetDirectoryEntryDataOffset(buffer),
-        Size = this.GetDirectoryEntrySize(buffer),
-        Name = this.GetDirectoryEntryName(buffer),
-        UncompressedSize = this.GetDirectoryEntryUncompressedSize(buffer),
-        Type = this.GetFileType(buffer),
-        CompressionMode = this.GetCompressionMode(buffer),
+        Offset = WordHelpers.GetInt32Le(buffer, _format.DirectoryEntryDataOffset),
+        Size = WordHelpers.GetInt32Le(buffer, _format.DirectoryEntrySizeOffset),
+        Name = CharHelpers.GetSafeName(buffer, _format.DirectoryEntryNameOffset, _format.DirectoryEntryNameLength),
       };
+
+      if ((_format.Flags & WadFormatFlag.CompressionMode) != 0)
+      {
+        result.CompressionMode = buffer[_format.DirectoryEntryCompressionModeOffset];
+        result.UncompressedSize = WordHelpers.GetInt32Le(buffer, _format.DirectoryEntryUncompressedSizeOffset);
+      }
+      else
+      {
+        result.UncompressedSize = result.Size;
+      }
+
+      if ((_format.Flags & WadFormatFlag.FileType) != 0)
+      {
+        result.Type = buffer[_format.DirectoryEntryFileTypeOffset];
+      }
 
       BufferHelpers.Release(buffer);
 
@@ -81,7 +87,7 @@ namespace Cyotek.Data
       Guard.ThrowIfNull(stream, nameof(stream));
       Guard.ThrowIfUnreadableStream(stream, nameof(stream));
 
-      buffer = this.ReadBuffer(stream, this.HeaderLength);
+      buffer = this.ReadBuffer(stream, _format.HeaderLength);
 
       if (this.IsValidSignature(buffer))
       {
@@ -89,9 +95,11 @@ namespace Cyotek.Data
         int directoryStart;
         int lumpCount;
 
-        type = this.GetType(buffer);
-        directoryStart = this.GetDirectoryStart(buffer);
-        lumpCount = this.GetDirectoryEntryCount(buffer);
+        type = _format.Type;
+        directoryStart = WordHelpers.GetInt32Le(buffer, _format.HeaderDirectoryOffset);
+        lumpCount = (_format.Flags & WadFormatFlag.DirectorySize) == 0
+          ? WordHelpers.GetInt32Le(buffer, _format.HeaderCountOffset)
+          : WordHelpers.GetInt32Le(buffer, _format.HeaderCountOffset) / _format.DirectoryEntryLength;
 
         result = new DirectoryHeader(type, directoryStart, lumpCount);
       }
@@ -107,33 +115,13 @@ namespace Cyotek.Data
 
     #endregion Public Methods
 
-    #region Protected Methods
+    #region Private Methods
 
-    protected virtual byte GetCompressionMode(byte[] buffer) => buffer[this.DirectoryEntryCompressionModeOffset];
-
-    protected virtual int GetDirectoryEntryCount(byte[] buffer) => WordHelpers.GetInt32Le(buffer, this.HeaderCountOffset);
-
-    protected virtual int GetDirectoryEntryDataOffset(byte[] buffer) => WordHelpers.GetInt32Le(buffer, this.DirectoryEntryDataOffset);
-
-    protected virtual string GetDirectoryEntryName(byte[] buffer) => CharHelpers.GetSafeName(buffer, this.DirectoryEntryNameOffset, this.DirectoryEntryNameLength);
-
-    protected virtual int GetDirectoryEntrySize(byte[] buffer) => WordHelpers.GetInt32Le(buffer, this.DirectoryEntrySizeOffset);
-
-    protected virtual int GetDirectoryEntryUncompressedSize(byte[] buffer) => WordHelpers.GetInt32Le(buffer, this.DirectoryEntryUncompressedSizeOffset);
-
-    protected virtual int GetDirectoryStart(byte[] buffer) => WordHelpers.GetInt32Le(buffer, this.HeaderDirectoryOffset);
-
-    protected virtual byte GetFileType(byte[] buffer) => buffer[this.DirectoryEntryFileTypeOffset];
-
-    protected abstract WadType GetType(byte[] buffer);
-
-    protected virtual bool IsValidSignature(byte[] buffer)
+    internal static bool IsValidSignature(byte[] buffer, byte[] signature)
     {
       bool result;
-      byte[] signature;
 
       result = true;
-      signature = this.SignatureBytes;
 
       for (int i = 0; i < signature.Length; i++)
       {
@@ -147,9 +135,9 @@ namespace Cyotek.Data
       return result;
     }
 
-    #endregion Protected Methods
+    public int DirectoryEntrySize => _format.DirectoryEntryLength;
 
-    #region Private Methods
+    private bool IsValidSignature(byte[] buffer) => WadDirectoryReader.IsValidSignature(buffer, _format.SignatureBytes);
 
     private byte[] ReadBuffer(Stream stream, byte length)
     {

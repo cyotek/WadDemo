@@ -52,6 +52,7 @@ namespace Cyotek.Data.Tests
           output.Position = 0;
           actual = output.ToArray();
           //File.WriteAllBytes(@"D:\Checkout\trunk\cyotek\source\demo\WadDemo\tests\data\nfo.pak", actual);
+          output.Dispose();
           CollectionAssert.AreEqual(expected, actual);
         }
       }
@@ -67,7 +68,7 @@ namespace Cyotek.Data.Tests
       byte[] expected;
       byte[] actual;
 
-      target = new PackDirectoryWriter();
+      target = new WadDirectoryWriter(WadType.Pack);
 
       actual = new byte[72];
       stream = new MemoryStream(actual, true);
@@ -160,6 +161,7 @@ namespace Cyotek.Data.Tests
       target.WriteEntry(stream, value);
 
       // assert
+      stream.Dispose();
       CollectionAssert.AreEqual(expected, actual);
     }
 
@@ -173,7 +175,7 @@ namespace Cyotek.Data.Tests
       byte[] expected;
       byte[] actual;
 
-      target = new PackDirectoryWriter();
+      target = new WadDirectoryWriter(WadType.Pack);
 
       actual = new byte[16];
       stream = new MemoryStream(actual, true);
@@ -204,6 +206,7 @@ namespace Cyotek.Data.Tests
       target.WriteHeader(stream, value);
 
       // assert
+      stream.Dispose();
       CollectionAssert.AreEqual(expected, actual);
     }
 
