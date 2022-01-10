@@ -12,6 +12,15 @@
 // Found this example useful?
 // https://www.cyotek.com/contribute
 
+// PACK format from
+// https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_3.htm#CPAKF
+
+// WAD2 format from
+// https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_7.htm
+
+// WAD3 format from
+// http://wiki.xentax.com/index.php/WAD_WAD3
+
 using System;
 
 namespace Cyotek.Data
