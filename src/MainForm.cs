@@ -19,6 +19,7 @@ using Cyotek.Demo.Windows.Forms;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -173,6 +174,8 @@ namespace Cyotek.Demo
       {
         fileName = FileDialogHelper.GetNextFileName(options.Path, lump.Name);
       }
+
+      Directory.CreateDirectory(Path.GetDirectoryName(fileName));
 
       result = new ExtractResult(lump, fileName);
 
@@ -503,8 +506,10 @@ namespace Cyotek.Demo
     private void WriteIndex(string path, List<ExtractResult> results)
     {
       string fileName;
+      int max;
 
       fileName = Path.Combine(path, "index.txt");
+      max = results.Select(x => x.Lump.Name.Length).Max() + 1;
 
       using (TextWriter writer = new StreamWriter(fileName))
       {
@@ -515,7 +520,7 @@ namespace Cyotek.Demo
           result = results[i];
 
           writer.Write(result.Lump.Name);
-          for (int j = result.Lump.Name.Length; j < 10; j++)
+          for (int j = result.Lump.Name.Length; j < max; j++)
           {
             writer.Write(' ');
           }
