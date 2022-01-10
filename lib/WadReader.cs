@@ -23,7 +23,6 @@ namespace Cyotek.Data
 
     private readonly int _directoryStart;
 
-    
     private readonly bool _keepOpen;
 
     private readonly int _lumpCount;
@@ -37,8 +36,6 @@ namespace Cyotek.Data
     private bool _disposedValue;
 
     private int _lumpIndex;
-
-    private WadFormat _format;
 
     #endregion Private Fields
 
@@ -54,11 +51,11 @@ namespace Cyotek.Data
       WadType type;
       DirectoryHeader header;
 
-      type= WadFile.GetFormat(stream);
+      type = WadFile.GetFormat(stream);
 
       _reader = new WadDirectoryReader(type);
       header = _reader.ReadHeader(stream);
-      
+
       _type = header.Type;
       _lumpCount = header.EntryCount;
       _directoryStart = header.DirectoryOffset;
