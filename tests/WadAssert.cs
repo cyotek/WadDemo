@@ -1,21 +1,21 @@
-﻿using NUnit.Framework;
-using System.IO;
-
-// Reading DOOM WAD files
+﻿// Reading DOOM WAD files
 // https://www.cyotek.com/blog/reading-doom-wad-files
 
 // Writing DOOM WAD files
 // https://www.cyotek.com/blog/writing-doom-wad-files
 
-// Copyright © 2020 Cyotek Ltd. All Rights Reserved.
+// Copyright © 2020-2022 Cyotek Ltd. All Rights Reserved.
 
 // This work is licensed under the MIT License.
 // See LICENSE.TXT for the full text
 
 // Found this example useful?
-// https://www.paypal.me/cyotek
+// https://www.cyotek.com/contribute
 
-namespace Cyotek.Data.Wad.Tests
+using NUnit.Framework;
+using System.IO;
+
+namespace Cyotek.Data.Tests
 {
   public static class WadAssert
   {
@@ -23,11 +23,11 @@ namespace Cyotek.Data.Wad.Tests
 
     public static void AreEqual(string expected, Stream actual)
     {
-      WadReader expectedReader;
-      WadReader actualReader;
-
       using (Stream input = File.OpenRead(expected))
       {
+        WadReader expectedReader;
+        WadReader actualReader;
+
         expectedReader = new WadReader(input);
         actualReader = new WadReader(actual, true);
 
@@ -78,7 +78,7 @@ namespace Cyotek.Data.Wad.Tests
       {
         Assert.Fail("Expected value, but received null.");
       }
-      else if (expected != null && actual != null)
+      else if (expected != null)
       {
         byte[] expectedData;
         byte[] actualData;
@@ -86,22 +86,32 @@ namespace Cyotek.Data.Wad.Tests
         Assert.AreEqual(expected.Name, actual.Name, "Lump name does not match.");
         Assert.AreEqual(expected.Size, actual.Size, "Lump size does not match.");
         Assert.AreEqual(expected.Index, actual.Index, "Lump index does not match.");
+        Assert.AreEqual(expected.CompressionMode, actual.CompressionMode, nameof(WadLump.CompressionMode));
+        Assert.AreEqual(expected.UncompressedSize, actual.UncompressedSize, nameof(WadLump.UncompressedSize));
+        Assert.AreEqual(expected.Type, actual.Type, nameof(WadLump.Type));
 
         expectedData = new byte[expected.Size];
         actualData = new byte[actual.Size];
 
         using (Stream stream = expected.GetInputStream())
         {
-          stream?.Read(expectedData, 0, expectedData.Length);
+          stream?.Read(expectedData, 0, expected.Size);
         }
 
         using (Stream stream = actual.GetInputStream())
         {
-          stream?.Read(actualData, 0, actualData.Length);
+          stream?.Read(actualData, 0, actual.Size);
         }
 
         CollectionAssert.AreEqual(expectedData, actualData);
       }
+    }
+
+    public static void AreEqual(DirectoryHeader expected, DirectoryHeader actual)
+    {
+      Assert.AreEqual(expected.Type, actual.Type, nameof(DirectoryHeader.Type));
+      Assert.AreEqual(expected.DirectoryOffset, actual.DirectoryOffset, nameof(DirectoryHeader.DirectoryOffset));
+      Assert.AreEqual(expected.EntryCount, actual.EntryCount, nameof(DirectoryHeader.EntryCount));
     }
 
     #endregion Public Methods

@@ -1,34 +1,33 @@
-﻿using System;
-using System.IO;
-using System.Text;
-
-// Reading DOOM WAD files
+﻿// Reading DOOM WAD files
 // https://www.cyotek.com/blog/reading-doom-wad-files
 
 // Writing DOOM WAD files
 // https://www.cyotek.com/blog/writing-doom-wad-files
 
-// Copyright © 2020 Cyotek Ltd. All Rights Reserved.
+// Copyright © 2020-2022 Cyotek Ltd. All Rights Reserved.
 
 // This work is licensed under the MIT License.
 // See LICENSE.TXT for the full text
 
 // Found this example useful?
-// https://www.paypal.me/cyotek
+// https://www.cyotek.com/contribute
 
-namespace Cyotek.Data.Wad
+using System;
+using System.IO;
+
+namespace Cyotek.Data
 {
   public class WadReader : IDisposable
   {
     #region Private Fields
-
-    private readonly byte[] _buffer;
 
     private readonly int _directoryStart;
 
     private readonly bool _keepOpen;
 
     private readonly int _lumpCount;
+
+    private readonly IDirectoryReader _reader;
 
     private readonly Stream _stream;
 
@@ -49,25 +48,17 @@ namespace Cyotek.Data.Wad
 
     public WadReader(Stream stream, bool keepOpen)
     {
-      Guard.ThrowIfNull(stream, nameof(stream));
-      Guard.ThrowIfUnreadableStream(stream, nameof(stream));
-      Guard.ThrowIfUnseekableStream(stream, nameof(stream));
+      WadType type;
+      DirectoryHeader header;
 
-      _buffer = new byte[WadConstants.DirectoryHeaderLength];
+      type = WadFile.GetFormat(stream);
 
-      if (stream.Read(_buffer, 0, WadConstants.WadHeaderLength) != WadConstants.WadHeaderLength)
-      {
-        throw new InvalidDataException("Failed to read header.");
-      }
+      _reader = new WadDirectoryReader(type);
+      header = _reader.ReadHeader(stream);
 
-      if (!this.IsWadSignature(_buffer))
-      {
-        throw new InvalidDataException("Stream does not appear to be a WAD file.");
-      }
-
-      _type = _buffer[0] == 'I' ? WadType.Internal : WadType.Patch;
-      _lumpCount = WordHelpers.GetInt32Le(_buffer, WadConstants.LumpCountOffset);
-      _directoryStart = WordHelpers.GetInt32Le(_buffer, WadConstants.DirectoryStartOffset);
+      _type = header.Type;
+      _lumpCount = header.EntryCount;
+      _directoryStart = header.DirectoryOffset;
 
       _keepOpen = keepOpen;
       _stream = stream;
@@ -102,23 +93,18 @@ namespace Cyotek.Data.Wad
       {
         int offset;
 
-        offset = _directoryStart + (_lumpIndex * WadConstants.DirectoryHeaderLength);
+        offset = _directoryStart + (_lumpIndex * _reader.DirectoryEntrySize);
 
         _stream.Position = offset;
 
-        if (_stream.Read(_buffer, 0, WadConstants.DirectoryHeaderLength) != WadConstants.DirectoryHeaderLength)
+        lump = _reader.ReadEntry(_stream);
+
+        if (lump == null)
         {
           throw new InvalidDataException("Failed to read directory entry.");
         }
 
-        lump = new WadLump
-        {
-          Offset = WordHelpers.GetInt32Le(_buffer, 0),
-          Size = WordHelpers.GetInt32Le(_buffer, 4),
-          Name = this.GetSafeLumpName(_buffer),
-          Index = _lumpIndex
-        };
-
+        lump.Index = _lumpIndex;
         lump.SetContainer(_stream);
 
         _lumpIndex++;
@@ -151,37 +137,5 @@ namespace Cyotek.Data.Wad
     }
 
     #endregion Protected Methods
-
-    #region Private Methods
-
-    private string GetSafeLumpName(byte[] entry)
-    {
-      int length;
-
-      length = 0;
-
-      for (int i = WadConstants.DirectoryHeaderLength; i > WadConstants.LumpNameOffset; i--)
-      {
-        if (entry[i - 1] != '\0')
-        {
-          length = i - WadConstants.LumpNameOffset;
-          break;
-        }
-      }
-
-      return length > 0
-         ? Encoding.ASCII.GetString(entry, WadConstants.LumpNameOffset, length)
-         : null;
-    }
-
-    private bool IsWadSignature(byte[] buffer)
-    {
-      return (buffer[0] == 'I' || buffer[0] == 'P')
-        && buffer[1] == 'W'
-        && buffer[2] == 'A'
-        && buffer[3] == 'D';
-    }
-
-    #endregion Private Methods
   }
 }

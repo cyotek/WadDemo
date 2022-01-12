@@ -1,8 +1,4 @@
-﻿using NUnit.Framework;
-using System.Collections.Generic;
-using System.IO;
-
-// Reading DOOM WAD files
+﻿// Reading DOOM WAD files
 // https://www.cyotek.com/blog/reading-doom-wad-files
 
 // Writing DOOM WAD files
@@ -14,9 +10,13 @@ using System.IO;
 // See LICENSE.TXT for the full text
 
 // Found this example useful?
-// https://www.paypal.me/cyotek
+// https://www.cyotek.com/contribute
 
-namespace Cyotek.Data.Wad.Tests
+using NUnit.Framework;
+using System.Collections.Generic;
+using System.IO;
+
+namespace Cyotek.Data.Tests
 {
   [TestFixture]
   public class WadFileTests : TestBase
@@ -129,7 +129,7 @@ namespace Cyotek.Data.Wad.Tests
 
       fileName = this.GetDataFileName("nfo.wad");
 
-      expected = this.CreateSampleWad();
+      expected = this.CreateSampleWad(WadType.Patch);
 
       // act
       actual = WadFile.LoadFrom(fileName);
@@ -139,10 +139,10 @@ namespace Cyotek.Data.Wad.Tests
     }
 
     [Test]
-    public void OptimiseTest()
+    public void OptimizeTest()
     {
       // arrange
-      using (Stream stream = this.CreateUnoptomizedSampleWad())
+      using (Stream stream = this.CreateUnoptimizedSampleWad())
       {
         WadFile target;
         byte[] expected;
@@ -165,7 +165,7 @@ namespace Cyotek.Data.Wad.Tests
     public void ReplaceTest()
     {
       // arrange
-      using (Stream stream = this.CreateSampleWad())
+      using (Stream stream = this.CreateSampleWad(WadType.Patch))
       {
         WadFile target;
         byte[] expected;

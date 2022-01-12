@@ -7,15 +7,15 @@
 // Decoding DOOM Picture Files
 // https://www.cyotek.com/blog/decoding-doom-picture-files
 
-// Copyright © 2017-2020 Cyotek Ltd. All Rights Reserved.
+// Copyright © 2017-2022 Cyotek Ltd. All Rights Reserved.
 
 // This work is licensed under the MIT License.
 // See LICENSE.TXT for the full text
 
 // Found this example useful?
-// https://www.paypal.me/cyotek
+// https://www.cyotek.com/contribute
 
-namespace Cyotek.Data.Wad
+namespace Cyotek.Data
 {
   internal static class WordHelpers
   {

@@ -1,22 +1,22 @@
-﻿using System;
-using System.IO;
-using System.Text;
-
-// Reading DOOM WAD files
+﻿// Reading DOOM WAD files
 // https://www.cyotek.com/blog/reading-doom-wad-files
 
 // Writing DOOM WAD files
 // https://www.cyotek.com/blog/writing-doom-wad-files
 
-// Copyright © 2020 Cyotek Ltd. All Rights Reserved.
+// Copyright © 2020-2022 Cyotek Ltd. All Rights Reserved.
 
 // This work is licensed under the MIT License.
 // See LICENSE.TXT for the full text
 
 // Found this example useful?
-// https://www.paypal.me/cyotek
+// https://www.cyotek.com/contribute
 
-namespace Cyotek.Data.Wad.Tests
+using System;
+using System.IO;
+using System.Text;
+
+namespace Cyotek.Data.Tests
 {
   public class TestBase
   {
@@ -81,13 +81,13 @@ namespace Cyotek.Data.Wad.Tests
       return output;
     }
 
-    protected Stream CreateSampleWad()
+    protected Stream CreateSampleWad(WadType wadType)
     {
       MemoryStream output;
 
       output = new MemoryStream();
 
-      using (WadOutputStream target = new WadOutputStream(output))
+      using (WadOutputStream target = new WadOutputStream(output, wadType))
       {
         using (BinaryWriter writer = new BinaryWriter(target, Encoding.UTF8, true))
         {
@@ -105,7 +105,7 @@ namespace Cyotek.Data.Wad.Tests
       return output;
     }
 
-    protected Stream CreateUnoptomizedSampleWad()
+    protected Stream CreateUnoptimizedSampleWad()
     {
       MemoryStream output;
       byte[] header;

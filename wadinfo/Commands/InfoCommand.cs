@@ -1,18 +1,18 @@
-﻿using Cyotek.Data.Wad;
-using Cyotek.Tools.WadInfo.Verbs;
-using System;
-using System.IO;
-
-// Reading DOOM WAD files
+﻿// Reading DOOM WAD files
 // https://www.cyotek.com/blog/reading-doom-wad-files
 
-// Copyright © 2020 Cyotek Ltd. All Rights Reserved.
+// Copyright © 2020-2022 Cyotek Ltd. All Rights Reserved.
 
 // This work is licensed under the MIT License.
 // See LICENSE.TXT for the full text
 
 // Found this example useful?
-// https://www.paypal.me/cyotek
+// https://www.cyotek.com/contribute
+
+using Cyotek.Data;
+using Cyotek.Tools.WadInfo.Verbs;
+using System;
+using System.IO;
 
 namespace Cyotek.Tools.WadInfo.Commands
 {
@@ -38,7 +38,7 @@ namespace Cyotek.Tools.WadInfo.Commands
 
           while ((lump = reader.GetNextLump()) != null)
           {
-            Console.WriteLine("{0}: Offset {1}, Size {2}", lump.Name, lump.Offset, lump.Size);
+            Console.WriteLine("{0}: Offset {1}, Size {2}, Uncompressed Size {3}, Compression Mode {4}, Type {5}", lump.Name, lump.Offset, lump.Size, lump.UncompressedSize, lump.CompressionMode, (char)lump.Type);
           }
         }
       }

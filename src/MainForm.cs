@@ -1,26 +1,27 @@
-﻿using Be.Windows.Forms;
-using Cyotek.Data.Wad;
-using Cyotek.Demo.Wad;
-using Cyotek.Demo.Windows.Forms;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Windows.Forms;
-
-// Reading DOOM WAD files
+﻿// Reading DOOM WAD files
 // https://www.cyotek.com/blog/reading-doom-wad-files
 
 // Writing DOOM WAD files
 // https://www.cyotek.com/blog/writing-doom-wad-files
 
-// Copyright © 2020 Cyotek Ltd. All Rights Reserved.
+// Copyright © 2020-2022 Cyotek Ltd. All Rights Reserved.
 
 // This work is licensed under the MIT License.
 // See LICENSE.TXT for the full text
 
 // Found this example useful?
-// https://www.paypal.me/cyotek
+// https://www.cyotek.com/contribute
+
+using Be.Windows.Forms;
+using Cyotek.Data;
+using Cyotek.Demo.Wad;
+using Cyotek.Demo.Windows.Forms;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
 
 namespace Cyotek.Demo
 {
@@ -144,14 +145,9 @@ namespace Cyotek.Demo
 
       this.SetStatus("Extracting...");
 
-      if (options.ExtractMode == ExtractMode.All)
-      {
-        results = this.ExtractAll(options);
-      }
-      else
-      {
-        results = this.ExtractSelection(options);
-      }
+      results = options.ExtractMode == ExtractMode.All
+        ? this.ExtractAll(options)
+        : this.ExtractSelection(options);
 
       if (options.CreateIndex)
       {
@@ -178,6 +174,8 @@ namespace Cyotek.Demo
       {
         fileName = FileDialogHelper.GetNextFileName(options.Path, lump.Name);
       }
+
+      Directory.CreateDirectory(Path.GetDirectoryName(fileName));
 
       result = new ExtractResult(lump, fileName);
 
@@ -220,7 +218,10 @@ namespace Cyotek.Demo
 
     private void ExtractFileToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      using (ExtractDialog dialog = new ExtractDialog())
+      using (ExtractDialog dialog = new ExtractDialog
+      {
+        AllowSelection = namesListBox.SelectedIndices.Count > 0
+      })
       {
         if (dialog.ShowDialog(this) == DialogResult.OK)
         {
@@ -368,14 +369,21 @@ namespace Cyotek.Demo
 
     private void OpenWad(string fileName)
     {
-      _wadFile = WadFile.LoadFrom(fileName);
+      try
+      {
+        _wadFile = WadFile.LoadFrom(fileName);
 
-      this.FillItems();
+        this.FillItems();
 
-      _fileName = fileName;
+        _fileName = fileName;
 
-      this.UpdateStatus();
-      this.UpdateWindowTitle();
+        this.UpdateStatus();
+        this.UpdateWindowTitle();
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(string.Format("Failed to open file. {0}", ex.Message), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
     }
 
     private void OriginalOrderToolStripMenuItem_Click(object sender, EventArgs e)
@@ -498,8 +506,10 @@ namespace Cyotek.Demo
     private void WriteIndex(string path, List<ExtractResult> results)
     {
       string fileName;
+      int max;
 
       fileName = Path.Combine(path, "index.txt");
+      max = results.Select(x => x.Lump.Name.Length).Max() + 1;
 
       using (TextWriter writer = new StreamWriter(fileName))
       {
@@ -510,7 +520,7 @@ namespace Cyotek.Demo
           result = results[i];
 
           writer.Write(result.Lump.Name);
-          for (int j = result.Lump.Name.Length; j < 10; j++)
+          for (int j = result.Lump.Name.Length; j < max; j++)
           {
             writer.Write(' ');
           }

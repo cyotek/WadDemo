@@ -1,22 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-
-// Reading DOOM WAD files
+﻿// Reading DOOM WAD files
 // https://www.cyotek.com/blog/reading-doom-wad-files
 
 // Writing DOOM WAD files
 // https://www.cyotek.com/blog/writing-doom-wad-files
 
-// Copyright © 2020 Cyotek Ltd. All Rights Reserved.
+// Copyright © 2020-2022 Cyotek Ltd. All Rights Reserved.
 
 // This work is licensed under the MIT License.
 // See LICENSE.TXT for the full text
 
 // Found this example useful?
-// https://www.paypal.me/cyotek
+// https://www.cyotek.com/contribute
 
-namespace Cyotek.Data.Wad
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+namespace Cyotek.Data
 {
   public class WadOutputStream : Stream
   {
@@ -27,6 +27,8 @@ namespace Cyotek.Data.Wad
     private readonly Stream _output;
 
     private readonly long _start;
+
+    private readonly IDirectoryWriter _writer;
 
     private bool _writtenDirectory;
 
@@ -40,17 +42,28 @@ namespace Cyotek.Data.Wad
     }
 
     public WadOutputStream(Stream output, WadType type)
+      : this(output, new WadDirectoryWriter(type))
+    {
+    }
+
+    public WadOutputStream(Stream output, WadFormat format)
+      : this(output, new WadDirectoryWriter(format))
+    {
+    }
+
+    public WadOutputStream(Stream output, IDirectoryWriter writer)
     {
       Guard.ThrowIfNull(output, nameof(output));
       Guard.ThrowIfUnwriteableStream(output, nameof(output));
       Guard.ThrowIfUnseekableStream(output, nameof(output));
-      Guard.ThrowIfOutOfBounds(type, WadType.Internal, WadType.Patch, "Invalid WAD type.", nameof(type));
+      Guard.ThrowIfNull(writer, nameof(writer));
 
       _output = output;
+      _writer = writer;
       _start = output.Position;
       _lumps = new List<WadLump>();
 
-      this.WriteWadHeader(type);
+      writer.WriteHeader(output, new DirectoryHeader(writer.Type, 0, 0));
     }
 
     #endregion Public Constructors
@@ -79,7 +92,7 @@ namespace Cyotek.Data.Wad
     {
       if (!_writtenDirectory)
       {
-        this.FinaliseLump();
+        this.FinalizeLump();
         this.WriteDirectory();
       }
 
@@ -89,19 +102,32 @@ namespace Cyotek.Data.Wad
     public void PutNextLump(string name)
     {
       Guard.ThrowIfNullOrEmpty(name, nameof(name));
-      Guard.ThrowIfOutOfBounds(name.Length, 1, WadConstants.LumpNameLength, "Name must be between 1 and 8 characters in length.", nameof(name));
+
+      this.PutNextLump(new WadLump
+      {
+        Name = name
+      });
+    }
+
+    public void PutNextLump(WadLump lump)
+    {
+      //Guard.ThrowIfOutOfBounds(name.Length, 1, WadConstants.LumpNameLength, "Name must be between 1 and 8 characters in length.", nameof(name));
 
       if (_writtenDirectory)
       {
         throw new InvalidOperationException("Directory has been written.");
       }
 
-      this.FinaliseLump();
+      this.FinalizeLump();
 
       _lumps.Add(new WadLump
       {
-        Name = name,
-        Offset = (int)_output.Position
+        Name = lump.Name,
+        Offset = (int)_output.Position,
+        Size = lump.Size,
+        UncompressedSize = lump.UncompressedSize,
+        CompressionMode = lump.CompressionMode,
+        Type = lump.Type
       });
     }
 
@@ -143,7 +169,7 @@ namespace Cyotek.Data.Wad
 
     #region Private Methods
 
-    private void FinaliseLump()
+    private void FinalizeLump()
     {
       if (_lumps.Count > 0)
       {
@@ -152,66 +178,31 @@ namespace Cyotek.Data.Wad
         lump = _lumps[_lumps.Count - 1];
 
         lump.Size = (int)_output.Position - lump.Offset;
+
+        if (lump.UncompressedSize == 0)
+        {
+          lump.UncompressedSize = lump.Size;
+        }
       }
     }
 
     private void WriteDirectory()
     {
-      byte[] buffer;
       long position;
 
-      buffer = new byte[WadConstants.DirectoryHeaderLength];
       position = _output.Position;
 
-      // first update the header
-      WordHelpers.PutInt32Le(_lumps.Count, buffer, 0);
-      WordHelpers.PutInt32Le((int)position, buffer, 4);
-
-      _output.Position = _start + 4;
-      _output.Write(buffer, 0, 8);
-
-      _output.Position = position;
-
-      // now the directory entries
+      // write the directory index
       for (int i = 0; i < _lumps.Count; i++)
       {
-        WadLump lump;
-
-        lump = _lumps[i];
-
-        for (int j = 0; j < lump.Name.Length; j++)
-        {
-          buffer[WadConstants.LumpNameOffset + j] = (byte)lump.Name[j];
-        }
-
-        for (int j = lump.Name.Length; j < WadConstants.LumpNameLength; j++)
-        {
-          buffer[WadConstants.LumpNameOffset + j] = 0;
-        }
-
-        WordHelpers.PutInt32Le(lump.Offset, buffer, WadConstants.LumpStartOffset);
-        WordHelpers.PutInt32Le(lump.Size, buffer, WadConstants.LumpSizeOffset);
-
-        _output.Write(buffer, 0, buffer.Length);
+        _writer.WriteEntry(_output, _lumps[i]);
       }
 
+      // update the header with the directory index start and count
+      _output.Position = _start;
+      _writer.WriteHeader(_output, new DirectoryHeader(_writer.Type, (int)position, _lumps.Count));
+
       _writtenDirectory = true;
-    }
-
-    private void WriteWadHeader(WadType type)
-    {
-      byte[] buffer;
-
-      buffer = new byte[WadConstants.WadHeaderLength];
-
-      buffer[0] = type == WadType.Internal 
-        ? (byte)'I' 
-        : (byte)'P';
-      buffer[1] = (byte)'W';
-      buffer[2] = (byte)'A';
-      buffer[3] = (byte)'D';
-
-      _output.Write(buffer, 0, WadConstants.WadHeaderLength);
     }
 
     #endregion Private Methods
