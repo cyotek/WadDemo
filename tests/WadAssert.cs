@@ -23,11 +23,11 @@ namespace Cyotek.Data.Tests
 
     public static void AreEqual(string expected, Stream actual)
     {
-      WadReader expectedReader;
-      WadReader actualReader;
-
       using (Stream input = File.OpenRead(expected))
       {
+        WadReader expectedReader;
+        WadReader actualReader;
+
         expectedReader = new WadReader(input);
         actualReader = new WadReader(actual, true);
 
@@ -95,12 +95,12 @@ namespace Cyotek.Data.Tests
 
         using (Stream stream = expected.GetInputStream())
         {
-          stream?.Read(expectedData, 0, expectedData.Length);
+          stream?.Read(expectedData, 0, expected.Size);
         }
 
         using (Stream stream = actual.GetInputStream())
         {
-          stream?.Read(actualData, 0, actualData.Length);
+          stream?.Read(actualData, 0, actual.Size);
         }
 
         CollectionAssert.AreEqual(expectedData, actualData);
